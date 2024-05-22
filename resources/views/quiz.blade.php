@@ -110,7 +110,7 @@
             console.log(yesRadioInput.length, noRadioInput.length);
             for (let i = 0; i < yesRadioInput.length; i++) {
                 if ($(yesRadioInput[i]).is(':checked')) {
-                    $(yesRadioInput[i]).val(2);
+                    $(yesRadioInput[i]).val(1);
 
                 }
                 if ($(noRadioInput[i]).is(':checked')) {

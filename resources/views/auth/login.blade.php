@@ -27,8 +27,9 @@
     if (localStorage.theme) document.documentElement.setAttribute("data-theme", localStorage.theme);
     </script>
 
-<!-- Favicon icon-->
-<link rel="shortcut icon" type="image/x-icon" href="https://codescandy.com/geeks-bootstrap-5/assets/images/favicon/favicon.ico">
+{{-- ====== Favicon Icon ====== --}}
+<link rel="shortcut icon" href="https://techbriva.com/front-template/assets/images/favicon-32x32.png" type="image/svg" />
+<link rel="apple-touch-icon" href="https://techbriva.com/front-template/assets/images/logo/logo.png">
 
 
 <!-- Libs CSS -->

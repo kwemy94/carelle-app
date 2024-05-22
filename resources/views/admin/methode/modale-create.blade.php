@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('use-method.store') }}" id="form-cetagory">
+                <form method="POST" action="{{ route('use-method.store') }}" id="form-category">
                     @csrf
                     <div class="card-body" id="ma-modale">
                         <div class="form-group">
@@ -50,6 +50,12 @@
                         </div>
 
 
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group error-cotation" hidden>
+                            <label for="" style="color: red">La somme des cotations doit être égale à 100</label>
+                            
+                        </div>
                     </div>
                     <button type="button" id="new-line" class="btn btn-outline-success btn-sm" title="Autre question"><span class="fa fa-plus"></span> </button>
 

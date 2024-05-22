@@ -38,9 +38,15 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('rapport.general.index') }}" class="nav-link">
                     <i class="nav-icon far fa-calendar-alt"></i>
                     <p>Rapport générale </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('solution.index') }}" class="nav-link">
+                    <i class="nav-icon far fa-calendar-alt"></i>
+                    <p>Solutions </p>
                 </a>
             </li>
 

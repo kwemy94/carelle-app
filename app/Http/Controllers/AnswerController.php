@@ -5,17 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Answer;
 use App\Repositories\AnswerRepository;
 use App\Repositories\QuestionnaireRepository;
+use App\Repositories\QuestionRepository;
 use Illuminate\Http\Request;
 
 class AnswerController extends Controller
 {
     private $answerRepository;
     private $questionnaireRepository;
+    private $questionRepository;
 
-    public function __construct(AnswerRepository $answerRepository, QuestionnaireRepository $questionnaireRepository)
-    {
+    public function __construct(
+        AnswerRepository $answerRepository,
+        QuestionnaireRepository $questionnaireRepository,
+        QuestionRepository $questionRepository
+    ) {
         $this->answerRepository = $answerRepository;
         $this->questionnaireRepository = $questionnaireRepository;
+        $this->questionRepository = $questionRepository;
     }
     /**
      * Display a listing of the resource.
@@ -57,9 +63,43 @@ class AnswerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Answer $answer)
+    public function show($id)
     {
-        //
+        $answer = $this->answerRepository->getById($id);
+        $questionnaire = $this->questionnaireRepository->getById($answer->questionnaire->id);
+
+        #creation du tableau des labels du graph
+        $labels = [];
+        $datas = [];
+        foreach ($questionnaire->categories as $category) {
+            $labels = array_merge($labels, [$category->name]);
+
+            #calcul de la valeur de chaque catégory et construire les datas
+            $som = 0;
+            foreach (json_decode($answer->resultat) as $key => $value) {
+                $id = explode("_", $key);
+                $question = $this->questionRepository->getById($id[1]);
+
+                #tester si la question est dans la catégorie courrante
+                if ($question->category_id == $category->id) {
+                    #tester si la réponse du client correspond à la réponse attendue
+                    if ($question->response == $value) {
+                        $som += $question->cotation;
+                    }
+                }
+            }
+            $datas = array_merge($datas, [$som]);
+        }
+
+        # Construction du tableau des couleurs
+        $bgColor =[];
+        $val = 10;
+        foreach ($labels as $key => $value) {
+            $val += $key + 8;
+            $bgColor = array_merge($bgColor, ["rgb(255, $val, $val)"]);
+        }
+
+        return view('admin.answer.show', compact('answer', 'labels', 'datas', 'bgColor'));
     }
 
     /**
@@ -90,5 +130,18 @@ class AnswerController extends Controller
             return redirect()->back()->with(['success' => false, "message" => "une erreur : " . $th->getMessage()]);
         }
         return redirect()->back()->with(['success' => true, "message" => "Réponse du quiz supprimée !"]);
+    }
+
+    public function IndexGeneralReport(){
+
+        #Questionnaires au status publié
+        $questionnaires = $this->questionnaireRepository->getAll();
+        
+        return view('admin.rapport-general.index', compact('questionnaires'));
+    }
+    public function generalReport($id){
+        $questionnaire = $this->questionnaireRepository->getById($id);
+        // dd($questionnaire);
+        return view('admin.rapport-general.show', compact('questionnaire'));
     }
 }

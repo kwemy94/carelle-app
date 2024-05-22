@@ -31,9 +31,9 @@
         if (localStorage.theme) document.documentElement.setAttribute("data-theme", localStorage.theme);
     </script>
 
-    <!-- Favicon icon-->
-    <link rel="shortcut icon" type="image/x-icon"
-        href="https://codescandy.com/geeks-bootstrap-5/assets/images/favicon/favicon.ico">
+    {{-- ====== Favicon Icon ====== --}}
+    <link rel="shortcut icon" href="https://techbriva.com/front-template/assets/images/favicon-32x32.png" type="image/svg" />
+    <link rel="apple-touch-icon" href="https://techbriva.com/front-template/assets/images/logo/logo.png">
 
 
     <!-- Libs CSS -->
@@ -99,9 +99,9 @@
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="agreeCheck">
                                         <label class="form-check-label" for="agreeCheck"><span>I agree to the <a
-                                                    href="terms-condition-page.html">Terms of
+                                                    href="#">Terms of
                                                     Service </a>and
-                                                <a href="terms-condition-page.html">Privacy Policy.</a></span></label>
+                                                <a href="#">Privacy Policy.</a></span></label>
                                     </div>
                                 </div>
                                 <div>

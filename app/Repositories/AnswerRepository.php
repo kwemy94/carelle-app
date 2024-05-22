@@ -11,7 +11,11 @@ class AnswerRepository extends ResourceRepository {
         $this->model = $answer;
     }
 
-    public function getAll() 
+    public function getById($id) {
+        return $this->model->with('questionnaire')->where('id', $id)->first();
+    }
+
+    public function getAll()
     {
         return $this->model->with('questionnaire')->orderBy('id', 'DESC')->get();
     }

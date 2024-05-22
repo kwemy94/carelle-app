@@ -18,4 +18,8 @@ class Category extends Model
     public function questions(){
         return $this->hasMany(Question::class);
     }
+
+    public function solution(){
+        return $this->belongsToMany(Solution::class);
+    }
 }

@@ -11,6 +11,10 @@ class QuestionnaireRepository extends ResourceRepository {
         $this->model = $questionnaire;
     }
 
+    public function getById($id) {
+        return $this->model->with('categories', 'questions')->where('id', $id)->first();
+    }
+
     public function getAll($status = null) 
     {
         if ($status) {
