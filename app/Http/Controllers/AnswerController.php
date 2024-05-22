@@ -63,7 +63,7 @@ class AnswerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($id, $bilan = false)
     {
         $answer = $this->answerRepository->getById($id);
         $questionnaire = $this->questionnaireRepository->getById($answer->questionnaire->id);
@@ -97,6 +97,10 @@ class AnswerController extends Controller
         foreach ($labels as $key => $value) {
             $val += $key + 8;
             $bgColor = array_merge($bgColor, ["rgb(255, $val, $val)"]);
+        }
+
+        if ($bilan) {
+            return [$labels, $datas, $bgColor];
         }
 
         return view('admin.answer.show', compact('answer', 'labels', 'datas', 'bgColor'));
@@ -133,15 +137,44 @@ class AnswerController extends Controller
     }
 
     public function IndexGeneralReport(){
+        $answers = $this->answerRepository->getAll();
 
         #Questionnaires au status publié
         $questionnaires = $this->questionnaireRepository->getAll();
         
-        return view('admin.rapport-general.index', compact('questionnaires'));
+        return view('admin.rapport-general.index', compact('questionnaires', 'answers'));
     }
     public function generalReport($id){
+        $answers = $this->answerRepository->getAll();
+        $questionnaires = $this->questionnaireRepository->getAll(2);
+
         $questionnaire = $this->questionnaireRepository->getById($id);
-        // dd($questionnaire);
-        return view('admin.rapport-general.show', compact('questionnaire'));
+
+        $totalAnswer = count($questionnaire->answers);
+
+        $labels = [];
+        $datas = array();
+        foreach ($questionnaire->answers as $answer) {
+            $res = $this->show($answer->id, true);
+            $labels = $res[0];
+
+            for ($i=0; $i < count($res[1]); $i++) {
+                if (isset($datas[$i])) {
+                    $datas[$i] += $res[1][$i];
+                } else{
+                    $datas[$i] = $res[1][$i];
+                }
+                
+            }
+        }
+        
+        #prendre la moyenne des datas trouvée
+        if ($totalAnswer > 0) {
+            for ($i=0; $i < count($datas); $i++) { 
+                $datas[$i] = $datas[$i]/$totalAnswer;
+            }
+        }
+        
+        return view('admin.rapport-general.show', compact('questionnaire', 'labels', 'datas', 'answers', 'questionnaires'));
     }
 }

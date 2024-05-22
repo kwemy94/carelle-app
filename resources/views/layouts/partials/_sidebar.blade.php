@@ -49,6 +49,12 @@
                     <p>Solutions </p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('settings.index') }}" class="nav-link">
+                    <i class="nav-icon fa fa-cogs"></i>
+                    <p>Configurations </p>
+                </a>
+            </li>
 
         </ul>
     </nav>

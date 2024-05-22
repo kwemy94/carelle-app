@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QuestionnaireController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SolutionController;
 
 /*
@@ -46,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/quiz-general-report', [AnswerController::class, 'IndexGeneralReport'])->name('rapport.general.index');
     Route::get('/quiz-general/{id}/report', [AnswerController::class, 'generalReport'])->name('rapport.general.chart');
     Route::resource('/solution', SolutionController::class);
+    Route::resource('/settings', SettingController::class);
 });
 
 Route::get('quiz/{id}/chouse', [QuestionnaireController::class, 'show'])->name('show-quiz-selected');

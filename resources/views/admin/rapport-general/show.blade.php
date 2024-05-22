@@ -62,8 +62,8 @@
                                                     {{ $category->name }}
                                                 </div>
                                             </div>
-                                            Ribbon Default <br />
-                                            <small>.ribbon-wrapper.ribbon-lg .ribbon</small>
+                                            XXX Solution <br />
+                                            <small>YYY Amélioration</small>
                                         </div>
                                     </div>
                                 @endforeach
@@ -124,14 +124,14 @@
     <script>
         const ctx = document.getElementById('pieChart');
 
-        let sizeData = 4;
+        let sizeData = @json($datas).length;
         const datas = {
 
-            labels: ['Vert', 'Rouge', 'Violet', 'bleu'],
+            labels: @json($labels),
             datasets: [{
-                label: 'My First Dataset',
+                label: @json($questionnaire->name),
 
-                data: [12, 32, 8, 9],
+                data: @json($datas),
                 backgroundColor: [
                     'rgb(205, 99, 132)',
                     sizeData >= 2 ? 'rgb(54, 162, 235)' : '',

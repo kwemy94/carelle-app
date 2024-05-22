@@ -19,58 +19,27 @@
     <section class="content mt-3">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-6">
-
-
-                    <!-- PIE CHART -->
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">Resultat du Client {{ $answer->id }}</h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                    <i class="fas fa-times"></i>
-                                </button>
+                <div class="col-md-6" id="settings">
+                    <form class="form-horizontal" method="POST" action="{{ route('settings.update', 1) }}" id="form-setting">
+                        @csrf
+                        @method('put')
+                        @foreach ($settings as $setting)
+                        <div class="form-group row">
+                            <div class="offset-sm-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="check-register" name="name_{{ $setting->id }}" value="{{ $setting->status == 1? 1: 0 }}" {{ $setting->status == 1? 'checked': '' }}> {{ $setting->name }}
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <canvas id="pieChart"
-                                style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        @endforeach
+                        <div class="form-group row">
+                            {{-- <div class="offset-sm-2 col-sm-10">
+                                <button id="btn-submit" type="submit" class="btn btn-danger">Enregistrer</button>
+                            </div> --}}
                         </div>
-
-                    </div>
-
-
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card card-success">
-                        <div class="card-header">
-                            <h3 class="card-title">Solution envisagéable</h3>
-                        </div>
-                        {{-- /.card-header --}}
-                        <div class="card-body">
-                            <div class="row">
-                                @foreach ($labels as $label)
-                                    <div class="col-sm-4">
-                                        <div class="position-relative p-3 bg-gray" style="height: 180px">
-                                            <div class="ribbon-wrapper">
-                                                <div class="ribbon bg-success">
-                                                    {{ $label }}
-                                                </div>
-                                            </div>
-                                            XXX Solution <br />
-                                            <small>YYY Amélioration</small>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                        {{-- /.card-body --}}
-                    </div>
+                    </form>
                 </div>
 
             </div>
@@ -86,8 +55,6 @@
     <!-- jQuery -->
     <script src="{{ asset('dashboard-template/plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
-    {{-- cdn du diagramme --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('dashboard-template/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -120,32 +87,17 @@
                 $('#form-delete-product' + i).submit();
             }
         }
-    </script>
-    <script>
-        const ctx = document.getElementById('pieChart');
 
-        let sizeData = @json($bgColor).length;
-        const datas = {
-
-            labels: @json($labels),
-            datasets: [{
-                label: 'Client '+@json($answer->id),
-
-                data: @json($datas),
-                backgroundColor: [
-                    'rgb(205, 99, 132)',
-                    sizeData >= 2 ? 'rgb(54, 162, 235)' : '',
-                    sizeData >= 3 ? 'rgb(255, 205, 86)' : '',
-                    sizeData >= 4 ? 'rgb(255, 5, 40)' : '',
-                    sizeData >= 5 ? 'rgb(255, 45, 90)' : '',
-                ],
-                hoverOffset: 4
-            }]
-        };
-
-        new Chart(ctx, {
-            type: 'pie',
-            data: datas
-        });
+        $('#btn-submit').click((e) =>{
+            e.preventDefault();
+            console.log($('#check-register').is(':checked'));
+            if ($('#check-register').is(':checked')) {
+                $('#check-register').prop('value', 0);
+            }
+            // else {
+            //     $('#check-register').val(0);
+            // }
+            // $('#form-setting').submit();
+        })
     </script>
 @endsection
