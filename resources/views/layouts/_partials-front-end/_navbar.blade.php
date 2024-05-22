@@ -61,10 +61,15 @@
         <!-- Collapse -->
         <div class="collapse navbar-collapse" id="navbar-default">
             <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="dropdown-item" href="{{ route('home') }}" >
+                        Accueil
+                    </a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarBrowse" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false" data-bs-display="static">
-                        Accueil
+                        About
                     </a>
                     <ul class="dropdown-menu dropdown-menu-arrow" aria-labelledby="navbarBrowse">
 
