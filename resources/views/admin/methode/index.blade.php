@@ -59,7 +59,7 @@
                                             </td>
 
                                             <td>
-                                                {{ $category->questionnaire->name }}
+                                                {{ isset( $category->questionnaire->name) ? $category->questionnaire->name : '' }}
                                             </td>
                                             <td>
                                                 {{ $category->description }}
@@ -76,9 +76,9 @@
 
                                                     @csrf
                                                     @method('delete')
-                                                    <span id="btn-delete-product{{ $category->id }}"
+                                                    {{-- <span id="btn-delete-product{{ $category->id }}"
                                                         onclick="deleteProduct({{ $category->id }})"
-                                                        class="fas fa-trash-alt" style="color: rgb(248, 38, 38)"></span>
+                                                        class="fas fa-trash-alt" style="color: rgb(248, 38, 38)"></span> --}}
                                                 </form>
                                             </td>
                                         </tr>

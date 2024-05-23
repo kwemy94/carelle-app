@@ -53,10 +53,17 @@ class AnswerController extends Controller
             // dd($inputs);
             $this->answerRepository->store($inputs);
         } catch (\Throwable $th) {
-            dd($th->getMessage());
-            return redirect()->back()->with(['success' => false, "message" => "une erreur s'est produite: "]);
+            $notification = array(
+                'message' => "une erreur s'est produite",
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
         }
-        return redirect()->route('home')->with(['success' => true, "message" => "Vos réponses ont été enregistrées!"]);
+        $notification = array(
+            'message' => "Vos réponses ont été enregistrées!",
+            'alert-type' => 'success'
+        );
+        return redirect()->route('home')->with($notification);
 
     }
 
@@ -131,9 +138,18 @@ class AnswerController extends Controller
             $answer = $this->answerRepository->getById($id);
             $answer->delete();
         } catch (\Throwable $th) {
-            return redirect()->back()->with(['success' => false, "message" => "une erreur : " . $th->getMessage()]);
+            $notification = array(
+                'message' => "Réponse du quiz supprimée ! " . $th->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
         }
-        return redirect()->back()->with(['success' => true, "message" => "Réponse du quiz supprimée !"]);
+
+        $notification = array(
+            'message' => "Questionnaire crée !",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     public function IndexGeneralReport(){

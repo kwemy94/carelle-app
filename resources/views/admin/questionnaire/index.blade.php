@@ -68,9 +68,9 @@
                                                         
                                                     @csrf
                                                     @method('delete')
-                                                    <span id="btn-delete-product{{ $questionnaire->id }}"
+                                                    {{-- <span id="btn-delete-product{{ $questionnaire->id }}"
                                                         onclick="deleteProduct({{ $questionnaire->id }})"
-                                                        class="fas fa-trash-alt" style="color: rgb(248, 38, 38)"></span>
+                                                        class="fas fa-trash-alt" style="color: rgb(248, 38, 38)"></span> --}}
                                                 </form>
                                             </td>
                                         </tr>

@@ -63,11 +63,18 @@ class SolutionController extends Controller
             });
             
         } catch (\Throwable $th) {
-            dd($th);
-            return redirect()->back()->with(['success' => false, "message" => "une erreur : " . $th->getMessage()]);
+            $notification = array(
+                'message' => "une erreur s'est produite " . $th->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
         }
 
-        return redirect()->back()->with(['success' => true, "message" => "Questionnaire crée !"]);
+        $notification = array(
+            'message' => "Solution crée !",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     /**

@@ -38,7 +38,7 @@ class CategoryController extends Controller
         $questionnaires = $this->questionnaireRepository->getAll(2);
         $answers = $this->answerRepository->getAll();
 
-        return view('admin.methode.index', compact('answers','methodes', 'questionnaires'));
+        return view('admin.methode.index', compact('answers', 'methodes', 'questionnaires'));
     }
 
     /**
@@ -76,9 +76,18 @@ class CategoryController extends Controller
                 }
             });
         } catch (\Throwable $th) {
-            return redirect()->back()->with(['success' => false, "message" => "une erreur : " . $th->getMessage()]);
+            $notification = array(
+                'message' => "une erreur s'est produite " . $th->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
         }
-        return redirect(route('use-method.index'))->with(['success' => true, "message" => "Méthode crée"]);
+
+        $notification = array(
+            'message' => "Catégorie crée !",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     /**
@@ -114,8 +123,17 @@ class CategoryController extends Controller
             $category = $this->categoryRepository->getById($id);
             $category->delete();
         } catch (\Throwable $th) {
-            return redirect()->back()->with(['success' => false, "message" =>"une erreur : ".$th->getMessage()]);
+            $notification = array(
+                'message' => "une erreur s'est produite " . $th->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
         }
-        return redirect()->back()->with(['success' => true, "message" =>"catégorie supprimée !"]);
+
+        $notification = array(
+            'message' => "Catégorie supprimée !",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 }

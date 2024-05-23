@@ -22,7 +22,7 @@
                                 id="category_id" required>
                                 <option value="" disabled selected >Choisir</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }} ({{ $category->questionnaire->name }})</option>
+                                    <option value="{{ $category->id }}">{{ $category->name }} ({{ isset($category->questionnaire->name) ? $category->questionnaire->name : ""}})</option>
                                 @endforeach
                             </select>
                         </div>

@@ -46,10 +46,19 @@ class QuestionnaireController extends Controller
         try {
             $this->questionnaireRepository->store($inputs);
         } catch (\Throwable $th) {
-            return redirect()->back()->with(['success' => false, "message" => "une erreur : " . $th->getMessage()]);
+            $notification = array(
+                'message' => "une erreur s'est produite " . $th->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
         }
 
-        return redirect()->back()->with(['success' => true, "message" => "Questionnaire crée !"]);
+        $notification = array(
+            'message' => "Questionnaire crée !",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+
     }
 
     /**
@@ -87,9 +96,18 @@ class QuestionnaireController extends Controller
         try {
             $questionnaire->delete();
         } catch (\Throwable $th) {
-            return redirect()->back()->with(['success' => false, "message" => "une erreur : " . $th->getMessage()]);
+            $notification = array(
+                'message' => "une erreur s'est produite " . $th->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
         }
-        return redirect()->back()->with(['success' => true, "message" => "Questionnaire supprimé !"]);
+
+        $notification = array(
+            'message' => "Questionnaire supprimé !",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     public function publishQuiz($id)
@@ -104,9 +122,18 @@ class QuestionnaireController extends Controller
             }
             $this->questionnaireRepository->update($id, ['status' => $status]);
         } catch (\Throwable $th) {
-            return redirect()->back()->with(['success' => false, "message" => "une erreur : " . $th->getMessage()]);
+            $notification = array(
+                'message' => "une erreur s'est produite " . $th->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
         }
-        return redirect()->back()->with(['success' => true, "message" => "Status mis à jour !"]);
+
+        $notification = array(
+            'message' => "Status mise à jour !",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
 
 
     }

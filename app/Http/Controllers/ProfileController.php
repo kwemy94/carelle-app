@@ -33,8 +33,14 @@ class ProfileController extends Controller
         }
 
         $request->user()->save();
+        
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        $notification = array(
+            'message' => "Questionnaire crée !",
+            'alert-type' => 'success'
+        );
+
+        return Redirect::route('profile.edit')->with($notification);
     }
 
     /**
