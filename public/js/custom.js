@@ -244,7 +244,7 @@ const submitFormData = async (formData,url, method='POST', dataType = "json") =>
 
 function ControlRequiredFields(inputs = $('.required')) {
     let success = true;
-
+    console.log('nbre champ requis : '+ inputs.length);
     for (let i = 0; i < inputs.length; i++) {
         if ($(inputs[i]).val() == null || $(inputs[i]).val().trim() == '') { // trim permet d'enlever les tabulation inutile sur un champ
             $(inputs[i]).addClass('error');

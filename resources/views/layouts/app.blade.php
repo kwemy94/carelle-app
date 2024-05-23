@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="{{ asset('dashboard-template/plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('dashboard-template/plugins/summernote/summernote-bs4.min.css') }}">
+    @yield('content-css')
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">

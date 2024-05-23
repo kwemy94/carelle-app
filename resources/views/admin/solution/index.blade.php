@@ -12,6 +12,13 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('dashboard-template/dist/css/adminlte.min.css') }}">
 @endsection
+@section('content-css')
+    <style>
+        .error {
+            border-bottom-color: red !important;
+        }
+    </style>
+@endsection
 
 
 
@@ -26,7 +33,7 @@
                             <div class="card-tools">
                                 {{-- <a href="{{ route('questionnaire.create')}}" class="btn btn-outline-success btn-sm"><span class="fa fa-plus"></span> Add</a> --}}
                                 <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal"
-                            data-target="#modal-default"><span class="fa fa-plus"></span> Add</button>
+                                    data-target="#modal-default"><span class="fa fa-plus"></span> Add</button>
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -55,23 +62,25 @@
                                                     {{ $category->name }} <br>
                                                 @endforeach
                                             </td>
-                                            
-                                            <td> 
+
+                                            <td>
                                                 @foreach ($solution->category as $category)
-                                                    {{ "]".$category->pivot->marge_inf.", ". $category->pivot->marge_sup."]" }}
+                                                    {{ ']' . $category->pivot->marge_inf . ', ' . $category->pivot->marge_sup . ']' }}
                                                 @endforeach
                                             </td>
                                             <td>
                                                 {{ $solution->description }}
                                             </td>
                                             <td style="display: flex !important;">
-                                                
-                                                <form method="post" action="{{ route('solution.destroy', $solution->id) }}"
+
+                                                <form method="post"
+                                                    action="{{ route('solution.destroy', $solution->id) }}"
                                                     id="form-delete-product{{ $solution->id }}">
-                                                    
-                                                    <a href="{{ route('solution.edit', $solution->id) }}" class="fas fa-pen-alt"
+
+                                                    <a href="{{ route('solution.edit', $solution->id) }}"
+                                                        class="fas fa-pen-alt"
                                                         style="color: #217fff; margin-left: 5px; margin-right: 5px;"></a>
-                                                        
+
                                                     @csrf
                                                     @method('delete')
                                                     {{-- <span id="btn-delete-product{{ $solution->id }}"
@@ -88,7 +97,7 @@
 
 
                                 </tbody>
-                                
+
                             </table>
                         </div>
                         <!-- /.card-body -->
@@ -108,7 +117,7 @@
     <!-- jQuery -->
     <script src="{{ asset('dashboard-template/plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
-
+    <script src="{{ asset('js/custom.js') }}"></script>
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('dashboard-template/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -122,7 +131,7 @@
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-    
+
 
     <script>
         $(function() {
@@ -130,7 +139,7 @@
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
-                "buttons": [ "excel", "pdf"]
+                "buttons": ["excel", "pdf"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
         });
@@ -141,10 +150,14 @@
             }
         }
 
-        $('#save-solution').click((e) =>{
+        $('#save-solution').click((e) => {
             e.preventDefault();
             let min = $('#marge_inf').val();
             let max = $('#marge_sup').val();
+            console.log("CF");
+            if (!ControlRequiredFields($('#solution-form .required'))) {
+                return 0;
+            }
             if (parseFloat(min) > parseFloat(max)) {
                 $('#error-marge').removeAttr('hidden');
                 return 0;
@@ -153,7 +166,7 @@
             }
 
             $('#solution-form').submit();
-            
+
         });
     </script>
 @endsection

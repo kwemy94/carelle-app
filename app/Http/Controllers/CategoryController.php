@@ -46,7 +46,10 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        $questionnaires = $this->questionnaireRepository->getAll(2);
+        $answers = $this->answerRepository->getAll();
+
+        return view('admin.methode.create', compact('answers', 'questionnaires'));
     }
 
     /**
@@ -75,7 +78,7 @@ class CategoryController extends Controller
         } catch (\Throwable $th) {
             return redirect()->back()->with(['success' => false, "message" => "une erreur : " . $th->getMessage()]);
         }
-        return redirect()->back()->with(['success' => true, "message" => "Méthode crée"]);
+        return redirect(route('use-method.index'))->with(['success' => true, "message" => "Méthode crée"]);
     }
 
     /**

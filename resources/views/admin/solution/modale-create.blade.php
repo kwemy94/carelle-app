@@ -12,9 +12,9 @@
                     @csrf
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="name">{{ __('Intitulé de la solution') }} <em style="color:red">*</em></label>
+                            <label for="intitule">{{ __('Intitulé de la solution') }} <em style="color:red">*</em></label>
                             <input type="text" class="form-control form-control-border border-width-2 required"
-                                name="intitule" id="name" placeholder="Satisfaction client" required>
+                                name="intitule" id="intitule" placeholder="Satisfaction client" required>
                         </div>
                         <div class="form-group">
                             <label for="category_id">category associé <em style="color: red">*</em></label>
