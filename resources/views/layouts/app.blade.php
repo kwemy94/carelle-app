@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>2s | Dashboard</title>
+    <title>Dashboard | Tech Briva</title>
 
     <link rel="shortcut icon" href="{{ asset('images/favicon-32x32.png') }}" type="image/svg" />
     <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
