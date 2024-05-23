@@ -15,35 +15,56 @@
                 </a>
             </div>
             <ul class="navbar-nav navbar-right-wrap mx-2 flex-row">
-                
+
 
                 <li class="dropdown ms-2 d-inline-block position-static">
                     <a class="rounded-circle" href="#" data-bs-toggle="dropdown" data-bs-display="static"
-						 aria-expanded="false">
-						 <div class="avatar avatar-md avatar-indicators avatar-online">
-							 <img alt="avatar" src="{{ asset('front-end/assets/images/avatar/avatar-00.jpg') }}"
-								 class="rounded-circle" >
-						 </div>
-					 </a>
+                        aria-expanded="false">
+                        <div class="avatar avatar-md avatar-indicators avatar-online">
+                            <img alt="avatar" src="{{ asset('front-end/assets/images/avatar/avatar-00.jpg') }}"
+                                class="rounded-circle">
+                        </div>
+                    </a>
                     <div class="dropdown-menu dropdown-menu-end position-absolute mx-3 my-5">
-                        
+
                         <div class="dropdown-divider"></div>
                         <ul class="list-unstyled">
-                            
-                            <li>
-                                <a class="dropdown-item" href="{{ route('login') }}">
-                                    <i class="fe fe-user me-2"></i>Connexion
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('register') }}">
-                                    <i class="fe fe-star me-2"></i>Subscription
-                                </a>
-                            </li>
-                            
+                            @auth
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('dashboard') }}">
+                                        <i class="fe fe-user me-2"></i>Dashboard
+                                    </a>
+                                </li>
+                                <li>
+                                    <form  method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <a href="{{ route('logout') }}" class="dropdown-item"
+                                        onclick="event.preventDefault();
+                                            this.closest('form').submit();">
+                                            <i class="fe fe-power me-2"></i>
+                                        {{ __('Sign Out') }}
+                                    </a>
+                                    </form>
+                                    
+                                </li>
+                            @else
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('login') }}">
+                                        <i class="fe fe-user me-2"></i>Connexion
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('register') }}">
+                                        <i class="fe fe-star me-2"></i>Subscription
+                                    </a>
+                                </li>
+                            @endauth
+
+
+
                         </ul>
                         <div class="dropdown-divider"></div>
-                        
+
                     </div>
                 </li>
             </ul>
@@ -62,7 +83,7 @@
         <div class="collapse navbar-collapse" id="navbar-default">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="dropdown-item" href="{{ route('home') }}" >
+                    <a class="dropdown-item" href="{{ route('home') }}">
                         Accueil
                     </a>
                 </li>

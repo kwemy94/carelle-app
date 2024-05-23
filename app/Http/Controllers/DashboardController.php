@@ -13,7 +13,7 @@ class DashboardController extends Controller
     }
 
     public function dashboard(){
-        $questionnaires = $this->questionnaireRepository->getAll();
+        $questionnaires = $this->questionnaireRepository->getAll(2);
 
         return view('dashboard', compact('questionnaires'));
     }

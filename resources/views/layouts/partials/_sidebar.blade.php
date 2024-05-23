@@ -55,6 +55,13 @@
                     <p>Configurations </p>
                 </a>
             </li>
+            <hr>
+            <li class="nav-item">
+                <a href="{{ route('home') }}" class="nav-link">
+                    <i class="nav-icon fa fa-home"></i>
+                    <p>Accueil </p>
+                </a>
+            </li>
 
         </ul>
     </nav>
