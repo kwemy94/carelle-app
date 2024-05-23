@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid px-0">
         <a class="" href="https://techbriva.com" target="_blank">
-            <img style="width: 45px; height:45px; border-radius: 50px" src="https://techbriva.com/front-template/assets/images/logo/logo.png" alt="">
+            <img style="width: 45px; height:45px; border-radius: 50px" src="{{ asset('images/logo.png') }}" alt="">
         </a>
         <!-- Mobile view nav wrap -->
 

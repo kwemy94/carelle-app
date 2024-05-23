@@ -28,8 +28,8 @@
     </script>
 
 {{-- ====== Favicon Icon ====== --}}
-<link rel="shortcut icon" href="https://techbriva.com/front-template/assets/images/favicon-32x32.png" type="image/svg" />
-<link rel="apple-touch-icon" href="https://techbriva.com/front-template/assets/images/logo/logo.png">
+<link rel="shortcut icon" href="{{ asset('images/favicon-32x32.png') }}" type="image/svg" />
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
 
 
 <!-- Libs CSS -->
