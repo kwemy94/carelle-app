@@ -13,7 +13,13 @@
     <link rel="stylesheet" href="{{ asset('dashboard-template/dist/css/adminlte.min.css') }}">
 @endsection
 
-
+@section('content-css')
+    <style>
+        .error{
+            border-bottom-color: red !important;
+        }
+    </style>
+@endsection
 
 @section('dashboard-content')
     <section class="content mt-4">
@@ -24,9 +30,9 @@
                         <div class="card-header">
                             <h3 class="card-title">{{ __('Liste des catégories enregistrés') }}</h3>
                             <div class="card-tools">
-                                <a href="{{ route('use-method.create')}}" class="btn btn-outline-success btn-sm"><span class="fa fa-plus"></span> Add</a>
-                                {{-- <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal"
-                                    data-target="#modal-default"><span class="fa fa-plus"></span> Add</button> --}}
+                                {{-- <a href="{{ route('use-method.create')}}" class="btn btn-outline-success btn-sm"><span class="fa fa-plus"></span> Add</a> --}}
+                                <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal"
+                                    data-target="#modal-default"><span class="fa fa-plus"></span> Add</button>
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -48,7 +54,9 @@
                                     @forelse ($methodes as $category)
                                         <tr>
                                             <td>{{ $cpt++ }}</td>
-                                            <td><a href="{{ route('use-method.show', $category->id) }}">{{ $category->name }}</a> </td>
+                                            <td><a
+                                                    href="{{ route('use-method.show', $category->id) }}">{{ $category->name }}</a>
+                                            </td>
 
                                             <td>
                                                 {{ $category->questionnaire->name }}
@@ -121,13 +129,12 @@
 
 
     <script>
-        
         $(function() {
             $("#example1").DataTable({
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
-                "buttons": [ "excel", "pdf"]
+                "buttons": ["excel", "pdf"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
         });
@@ -137,7 +144,77 @@
                 $('#form-delete-product' + i).submit();
             }
         }
+    </script>
 
-        
+    <script>
+
+        function ControlRequiredFields(inputs = $('.required')) {
+            let success = true;
+            console.log('nbre champ requis : ' + inputs.length);
+            for (let i = 0; i < inputs.length; i++) {
+                if ($(inputs[i]).val() == null || $(inputs[i]).val().trim() ==
+                    '') { // trim permet d'enlever les tabulation inutile sur un champ
+                    $(inputs[i]).addClass('error');
+                    success = false;
+                } else {
+                    $(inputs[i]).removeClass('error');
+                }
+            }
+
+            return success;
+        }
+
+        $('#new-line').click(() => {
+            var a = 2;
+            let newQuestion = '<div id="block-question"><div class="form-group">' +
+                '<button type="button" id="delete-line" class="btn btn-outline-danger btn-sm" title="Supprimer"><span class="fa fa-trash"></span> </button>' +
+                '<label for="name">{{ __('Question') }} <em style="color:red">*</em></label>' +
+                '<input type="text" class="form-control required-question form-control-border border-width-1 required"' +
+                'name="lines[question][]" id="" placeholder="Satisfaction client" required>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label for="name">{{ __('Cotation') }} <em style="color:red">*</em></label>' +
+                '<input type="number" class="form-control required-question cotation form-control-border border-width-1 required"' +
+                'name="lines[cotation][]" id="q1" min="1" step="0.5" placeholder="Satisfaction client" required>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label for="response">Réponse 1 <em style="color: red">*</em></label>' +
+                '<select name="lines[response][]" class="custom-select required-question form-control-border border-width-1 required"' +
+                'id="response" required>' +
+                '<option value="" disabled selected >Choisir</option>' +
+                '<option value="0">Faux / Non</option>' +
+                '<option value="1">Vrai / Oui</option>' +
+                '</select>' +
+                '</div></div>';
+            if (!ControlRequiredFields($('.required-question'))) {
+                alert("Remplir les questions précedente  avant de créer une autre");
+                return 0;
+            }
+            $('#ma-modale').append(newQuestion);
+
+        });
+
+        $("body").on("click", "#delete-line", function() {
+            $(this).parents("#block-question").remove();
+            console.log(1);
+        });
+
+        $('#save-category').click((e) => {
+            e.preventDefault();
+            let inputs = $('.cotation');
+            let sommeCotation = 0;
+            if (!ControlRequiredFields($('#form-category .required'))) {
+                return 0;
+            }
+            for (let i = 0; i < inputs.length; i++) {
+                sommeCotation += parseFloat($(inputs[i]).val());
+            }
+            if (sommeCotation != 100) {
+                $('.error-cotation').removeAttr('hidden');
+                return 0;
+            }
+            $('#save-category').prop("disabled", true);
+            $('#form-category').submit();
+        });
     </script>
 @endsection
