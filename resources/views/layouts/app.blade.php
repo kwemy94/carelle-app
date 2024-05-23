@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>2s | Dashboard</title>
 
+    <link rel="shortcut icon" href="{{ asset('images/favicon-32x32.png') }}" type="image/svg" />
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
+
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
