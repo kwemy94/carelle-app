@@ -44,10 +44,12 @@
                                         name="name" id="name" placeholder="Satisfaction client" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="questionnaire_id">Questionnaire associé <em style="color: red">*</em></label>
-                                    <select name="questionnaire_id" class="custom-select form-control-border border-width-1 required"
+                                    <label for="questionnaire_id">Questionnaire associé <em
+                                            style="color: red">*</em></label>
+                                    <select name="questionnaire_id"
+                                        class="custom-select form-control-border border-width-1 required"
                                         id="questionnaire_id" required>
-                                        <option value="" disabled selected >Choisir</option>
+                                        <option value="" disabled selected>Choisir</option>
                                         @foreach ($questionnaires as $qestionnaire)
                                             <option value="{{ $qestionnaire->id }}">{{ $qestionnaire->name }}</option>
                                         @endforeach
@@ -57,37 +59,44 @@
                                 <h5>Ajouter les questions de la méthode</h5>
                                 <div class="form-group">
                                     <label for="name">{{ __('Question 1') }} <em style="color:red">*</em></label>
-                                    <input type="text" class="form-control required-question form-control-border border-width-1 required"
+                                    <input type="text"
+                                        class="form-control required-question form-control-border border-width-1 required"
                                         name="lines[question][]" id="q1" placeholder="Satisfaction client" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="name">{{ __('Cotation') }} <em style="color:red">*</em></label>
-                                    <input type="number" class="form-control required-question cotation form-control-border border-width-1 required"
-                                        name="lines[cotation][]" id="q1" min="1" step="0.5" placeholder="Satisfaction client" required>
+                                    <input type="number"
+                                        class="form-control required-question cotation form-control-border border-width-1 required"
+                                        name="lines[cotation][]" id="q1" min="1" step="0.5"
+                                        placeholder="Satisfaction client" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="response">Réponse 1 <em style="color: red">*</em></label>
-                                    <select name="lines[response][]" id="r1" class="custom-select required-question form-control-border border-width-1 required"
+                                    <select name="lines[response][]" id="r1"
+                                        class="custom-select required-question form-control-border border-width-1 required"
                                         id="response" required>
-                                        <option value="" disabled selected >Choisir</option>
+                                        <option value="" disabled selected>Choisir</option>
                                         <option value="0">Faux / Non</option>
                                         <option value="1">Vrai / Oui</option>
-                                        
+
                                     </select>
                                 </div>
-        
-        
+
+
                             </div>
                             <div class="card-body">
                                 <div class="form-group error-cotation" hidden>
-                                    <label for="" style="color: red">La somme des cotations doit être égale à 100</label>
-                                    
+                                    <label for="" style="color: red">La somme des cotations doit être égale à
+                                        100</label>
+
                                 </div>
                             </div>
-                            <button type="button" id="new-line" class="btn btn-outline-success btn-sm" title="Autre question"><span class="fa fa-plus"></span> </button>
-        
+                            <button type="button" id="new-line" class="btn btn-outline-success btn-sm"
+                                title="Autre question"><span class="fa fa-plus"></span> </button>
+
                             <div class="modal-footer justify-content-between">
-                                <button type="submit" id="save-category" class="btn btn-primary btn-sm">{{ __('Enregistrer') }}
+                                <button type="submit" id="save-category"
+                                    class="btn btn-primary btn-sm">{{ __('Enregistrer') }}
                                 </button>
                             </div>
                         </form>
@@ -108,8 +117,8 @@
     <!-- jQuery -->
     <script src="{{ asset('dashboard-template/plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
-    <script src="{{ asset('js/custom.js') }}"></script>
-    
+    {{-- <script src="{{ asset('js/custom.js') }}"></script> --}}
+
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('dashboard-template/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -123,7 +132,7 @@
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-    
+
 
 
     <script>
@@ -137,16 +146,32 @@
 
         });
 
+        function ControlRequiredFields(inputs = $('.required')) {
+            let success = true;
+            console.log('nbre champ requis : ' + inputs.length);
+            for (let i = 0; i < inputs.length; i++) {
+                if ($(inputs[i]).val() == null || $(inputs[i]).val().trim() ==
+                    '') { // trim permet d'enlever les tabulation inutile sur un champ
+                    $(inputs[i]).addClass('error');
+                    success = false;
+                } else {
+                    $(inputs[i]).removeClass('error');
+                }
+            }
+
+            return success;
+        }
+
         $('#new-line').click(() => {
             var a = 2;
             let newQuestion = '<div id="block-question"><div class="form-group">' +
                 '<button type="button" id="delete-line" class="btn btn-outline-danger btn-sm" title="Supprimer"><span class="fa fa-trash"></span> </button>' +
-                '<label for="name">{{ __("Question") }} <em style="color:red">*</em></label>' +
+                '<label for="name">{{ __('Question') }} <em style="color:red">*</em></label>' +
                 '<input type="text" class="form-control required-question form-control-border border-width-1 required"' +
                 'name="lines[question][]" id="" placeholder="Satisfaction client" required>' +
                 '</div>' +
                 '<div class="form-group">' +
-                '<label for="name">{{ __("Cotation") }} <em style="color:red">*</em></label>' +
+                '<label for="name">{{ __('Cotation') }} <em style="color:red">*</em></label>' +
                 '<input type="number" class="form-control required-question cotation form-control-border border-width-1 required"' +
                 'name="lines[cotation][]" id="q1" min="1" step="0.5" placeholder="Satisfaction client" required>' +
                 '</div>' +

@@ -117,7 +117,7 @@
     <!-- jQuery -->
     <script src="{{ asset('dashboard-template/plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
-    <script src="{{ asset('js/custom.js') }}"></script>
+    {{-- <script src="{{ asset('js/custom.js') }}"></script> --}}
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('dashboard-template/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -148,6 +148,22 @@
             if (confirm('Voulez-vous supprimer cette solution ?')) {
                 $('#form-delete-product' + i).submit();
             }
+        }
+
+        function ControlRequiredFields(inputs = $('.required')) {
+            let success = true;
+            console.log('nbre champ requis : ' + inputs.length);
+            for (let i = 0; i < inputs.length; i++) {
+                if ($(inputs[i]).val() == null || $(inputs[i]).val().trim() ==
+                    '') { // trim permet d'enlever les tabulation inutile sur un champ
+                    $(inputs[i]).addClass('error');
+                    success = false;
+                } else {
+                    $(inputs[i]).removeClass('error');
+                }
+            }
+
+            return success;
         }
 
         $('#save-solution').click((e) => {
