@@ -108,7 +108,7 @@
     <!-- jQuery -->
     <script src="{{ asset('dashboard-template/plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
-    
+    <script src="{{ asset('js/custom.js') }}"></script>
     
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('dashboard-template/plugins/datatables/jquery.dataTables.min.js') }}"></script>
@@ -123,7 +123,7 @@
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
+    
 
 
     <script>
