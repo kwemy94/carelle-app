@@ -62,7 +62,7 @@
                         <div class="card-body p-6">
                             <div class="mb-4" style="text-align: center">
                                 <a href="{{ route('home') }}"><img style="width: 70px; height: 70px;    border-radius: 50%;"
-                                        src="https://techbriva.com/front-template/assets/images/logo/logo.png"
+                                        src="{{ asset('images/logo.png') }}"
                                         class="mb-4" alt="logo-icon"></a>
                                 <h1 class="mb-1 fw-bold">Créer un compte</h1>
                                 <span>Vous avez déjà un compte?
