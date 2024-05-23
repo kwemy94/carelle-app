@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="{{ asset('dashboard-template/plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('dashboard-template/plugins/summernote/summernote-bs4.min.css') }}">
-    <script src="{{ asset('js/custom.js') }}"></script>
+    <script src="{{ asset('dashboard-template/js/custom.js') }}"></script>
     @yield('content-css')
 </head>
 
