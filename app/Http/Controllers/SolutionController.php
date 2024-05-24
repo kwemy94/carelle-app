@@ -107,6 +107,6 @@ class SolutionController extends Controller
     public function destroy($id)
     {
         $solution = $this->solutionRepository->getById($id);
-        $solution->authors()->detach($author->id);
+        // $solution->authors()->detach($author->id);
     }
 }

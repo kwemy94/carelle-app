@@ -50,6 +50,8 @@
     <!-- Theme CSS -->
     <link rel="stylesheet" href="{{ asset('front-end/assets/css/theme.min.css') }}">
     <title>Quiz Tech Briva</title>
+
+    @yield('front-end-css')
 </head>
 
 <body>

@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QuestionnaireController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SolutionController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/quiz-general/{id}/report', [AnswerController::class, 'generalReport'])->name('rapport.general.chart');
     Route::resource('/solution', SolutionController::class);
     Route::resource('/settings', SettingController::class);
+    Route::get('/list-user', [UserController::class, 'index'])->name('list.all.user');
+    Route::delete('/delete/{id}/user', [UserController::class, 'destroy'])->name('user.destroy');
 });
 
 Route::get('quiz/{id}/chouse', [QuestionnaireController::class, 'show'])->name('show-quiz-selected');

@@ -1,5 +1,13 @@
 @extends('layouts.layout')
 
+@section('front-end-css')
+    <style>
+        .error{
+            border-color: red !important;
+        }
+    </style>
+@endsection
+
 @section('front-content')
     <div class="col-lg-9 col-md-8 col-12">
         <div id="courseForm" class="bs-stepper">
@@ -121,5 +129,21 @@
 
             $('#form-quiz').submit();
         });
+
+        function controlRequiredFields(inputs = $('.required')) {
+            let success = true;
+            console.log('nbre champ requis : ' + inputs.length);
+            for (let i = 0; i < inputs.length; i++) {
+                // trim permet d'enlever les tabulation inutile sur un champ
+                if (!$(inputs[i]).is(':checked') || $(inputs[i]).val().trim() == '') {
+                    $(inputs[i]).addClass('error');
+                    success = false;
+                } else {
+                    $(inputs[i]).removeClass('error');
+                }
+            }
+
+            return success;
+        }
     </script>
 @endsection
