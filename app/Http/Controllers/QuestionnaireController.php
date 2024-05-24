@@ -6,17 +6,21 @@ use Illuminate\Http\Request;
 use App\Models\Questionnaire;
 use App\Repositories\AnswerRepository;
 use App\Repositories\QuestionnaireRepository;
+use App\Repositories\SettingRepository;
 
 class QuestionnaireController extends Controller
 {
 
     private $questionnaireRepository;
     private $answerRepository;
+    private $settingRepository;
 
-    public function __construct(QuestionnaireRepository $questionnaireRepository, AnswerRepository $answerRepository)
+    public function __construct(QuestionnaireRepository $questionnaireRepository, AnswerRepository $answerRepository,
+            SettingRepository $settingRepository)
     {
         $this->questionnaireRepository = $questionnaireRepository;
         $this->answerRepository = $answerRepository;
+        $this->settingRepository = $settingRepository;
     }
     /**
      * Display a listing of the resource.
@@ -68,8 +72,9 @@ class QuestionnaireController extends Controller
     {
         $questionnaire = $this->questionnaireRepository->getQuestions($id);
         $questionnaires = $this->questionnaireRepository->getAll();
-        // dd($questionnaire);
-        return view('quiz', compact('questionnaire', 'questionnaires'));
+        $canRegister = $this->settingRepository->getByName("Activer l'enregistrement des utilisateurs");
+
+        return view('quiz', compact('questionnaire', 'questionnaires', 'canRegister'));
     }
 
     /**

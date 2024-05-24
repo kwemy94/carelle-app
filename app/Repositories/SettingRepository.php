@@ -15,6 +15,10 @@ class SettingRepository extends ResourceRepository {
         return $this->model->where('id', $id)->first();
     }
 
+    public function getByName($name) {
+        return $this->model->where('name', $name)->first();
+    }
+
     public function getAll()
     {
         return $this->model->orderBy('id', 'DESC')->get();

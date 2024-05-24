@@ -61,18 +61,26 @@ class SettingController extends Controller
     public function update(Request $request, $id)
     {
         $inputs = $request->except('_token','_method');
+        // dd($inputs);
         try {
             foreach ($inputs as $key => $value) {
                 $id = explode("_", $key);
-                dd($key, $value);
-                $this->settingRepository->update($id[1], ['status' => 1]);
+                // dd($key, $value);
+                $this->settingRepository->update($id[1], ['status' => $value]);
             }
         } catch (\Throwable $th) {
-            dd($th);
-            return redirect()->back()->with(['success' => false, "message" => "une erreur : " . $th->getMessage()]);
+            $notification = array(
+                'message' => "une erreur s'est produite " . $th->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
         }
 
-        return redirect()->back()->with(['success' => true, "message" => "Configurations enregistrées !"]);
+        $notification = array(
+            'message' => "Configuration enregistrée avec succès !",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     /**

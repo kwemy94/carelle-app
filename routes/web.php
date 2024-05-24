@@ -11,6 +11,7 @@ use App\Http\Controllers\QuestionnaireController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SolutionController;
 use App\Http\Controllers\UserController;
+use App\Models\Setting;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +26,8 @@ use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     $questionnaires = Questionnaire::where('status', 1)->get();
-    return view('welcome', compact('questionnaires'));
+    $canRegister = Setting::where('name', "Activer l'enregistrement des utilisateurs")->first();
+    return view('welcome', compact('questionnaires', 'canRegister'));
 })->name('home');
 
 # Language management

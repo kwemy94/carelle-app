@@ -28,16 +28,17 @@
                             <div class="offset-sm-2 col-sm-10">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" id="check-register" name="name_{{ $setting->id }}" value="{{ $setting->status == 1? 1: 0 }}" {{ $setting->status == 1? 'checked': '' }}> {{ $setting->name }}
+                                        <input type="checkbox" id="check-register" value="{{ $setting->status == 1? 1: 0 }}" {{ $setting->status == 1? 'checked': '' }}> {{ $setting->name }}
+                                        <input type="text" hidden id="check-register-value" name="name_{{ $setting->id }}" value="{{ $setting->status == 1? 1: 0 }}" >
                                     </label>
                                 </div>
                             </div>
                         </div>
                         @endforeach
                         <div class="form-group row">
-                            {{-- <div class="offset-sm-2 col-sm-10">
+                            <div class="offset-sm-2 col-sm-10">
                                 <button id="btn-submit" type="submit" class="btn btn-danger">Enregistrer</button>
-                            </div> --}}
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -92,12 +93,12 @@
             e.preventDefault();
             console.log($('#check-register').is(':checked'));
             if ($('#check-register').is(':checked')) {
-                $('#check-register').prop('value', 0);
+                $('#check-register-value').val(1);
             }
-            // else {
-            //     $('#check-register').val(0);
-            // }
-            // $('#form-setting').submit();
+            else {
+                $('#check-register-value').val(0);
+            }
+            $('#form-setting').submit();
         })
     </script>
 @endsection

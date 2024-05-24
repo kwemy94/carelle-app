@@ -36,16 +36,16 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <form  method="POST" action="{{ route('logout') }}">
+                                    <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <a href="{{ route('logout') }}" class="dropdown-item"
-                                        onclick="event.preventDefault();
+                                            onclick="event.preventDefault();
                                             this.closest('form').submit();">
                                             <i class="fe fe-power me-2"></i>
-                                        {{ __('Sign Out') }}
-                                    </a>
+                                            {{ __('Sign Out') }}
+                                        </a>
                                     </form>
-                                    
+
                                 </li>
                             @else
                                 <li>
@@ -53,11 +53,16 @@
                                         <i class="fe fe-user me-2"></i>Connexion
                                     </a>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('register') }}">
-                                        <i class="fe fe-star me-2"></i>Subscription
-                                    </a>
-                                </li>
+                                @isset($canRegister)
+                                    @if ($canRegister->status == 1)
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('register') }}">
+                                                <i class="fe fe-star me-2"></i>Subscription
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endisset
+
                             @endauth
 
 
