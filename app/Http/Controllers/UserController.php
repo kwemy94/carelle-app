@@ -13,8 +13,14 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
-    public function index(){
+    public function index($id=null){
         $users = $this->userRepository->getAll();
+
+        if($id){
+            return response()->json([
+                'users'=>$users
+            ]);
+        }
 
         return view('admin.users.index', compact('users'));
     }
