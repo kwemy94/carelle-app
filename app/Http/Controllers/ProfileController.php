@@ -36,7 +36,7 @@ class ProfileController extends Controller
         
 
         $notification = array(
-            'message' => "Questionnaire crée !",
+            'message' => "Profile mise à jour !",
             'alert-type' => 'success'
         );
 
