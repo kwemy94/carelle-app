@@ -46,17 +46,18 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="name">{{ __('auth.name') }} </label>
-                                    <input type="text" class="form-control" id="name"
+                                    <input type="text" class="form-control" name="name" id="name"
                                         value="{{ old('name', $user->name) }}" required autofocus autocomplete="name">
-                                    <span class="mt-2" :messages="$errors - > get('name')"></span>
+                                    <span class="mt-2" :messages="$errors->get('name')"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Email address</label>
                                     <input type="email" name="email" class="form-control" id="email"
                                         value="{{ old('email', $user->email) }}" required autocomplete="username">
-                                    <span class="mt-2" :messages="$errors - > get('email')"></span>
+                                    <span class="mt-2" :messages="$errors->get('email')"></span>
                                 </div>
                             </div>
+                            
 
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -79,19 +80,19 @@
                                     <label for="current_password">{{ __('Current Password') }} </label>
                                     <input type="password" name="current_password" class="form-control" id="current_password"
                                         value="" required>
-                                    <span class="mt-2" :messages="$errors ->updatePassword->get('current_password')"></span>
+                                    <span class="mt-2" :messages="$errors->updatePassword->get('current_password')"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="password">{{ __('New Password') }} </label>
                                     <input type="password" name="password" class="form-control" id="password"
                                         required>
-                                    <span class="mt-2" :messages="$errors ->updatePassword->get('password')"></span>
+                                    <span class="mt-2" :messages="$errors->updatePassword->get('password')"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="password_confirmation">{{ __('Confirm Password') }} </label>
                                     <input type="password" name="password_confirmation" class="form-control" id="password_confirmation"
                                         value="" required>
-                                    <span class="mt-2" :messages="$errors ->updatePassword->get('password_confirmation')"></span>
+                                    <span class="mt-2" :messages="$errors->updatePassword->get('password_confirmation')"></span>
                                 </div>
                             </div>
 

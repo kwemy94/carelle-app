@@ -11,9 +11,17 @@ class CategoryRepository extends ResourceRepository {
         $this->model = $category;
     }
 
+    public function getById($id) {
+        return $this->model->with('questions','questionnaire')->where('id', $id)->first();
+    }
+
     public function getAll() 
     {
         return $this->model->orderBy('id', 'DESC')->get();
+    }
+    public function getCategoryByQuiz($id)
+    {
+        return $this->model->where('questionnaire_id', $id)->with('solution')->orderBy('id', 'DESC')->get();
     }
 
 }

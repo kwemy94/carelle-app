@@ -93,25 +93,37 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show($id)
     {
-        //
+        $questionnaires = $this->questionnaireRepository->getAll(2);
+        $answers = $this->answerRepository->getAll();
+        $category = $this->categoryRepository->getById($id);
+
+        return view('admin.methode.show', compact('answers', 'category', 'questionnaires'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit($id)
     {
-        //
+        $category = $this->categoryRepository->getById($id);
+        $questionnaires = $this->questionnaireRepository->getAll(2);
+
+        $view = view('admin.methode.edit', compact( 'category', 'questionnaires'))->render();
+
+        return response()->json([
+            'view'=>$view
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
-        //
+        $inputs = $request->all();
+        dd($inputs);
     }
 
     /**

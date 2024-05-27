@@ -37,6 +37,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <div id="loader"></div>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
@@ -70,8 +71,9 @@
                                                     action="{{ route('use-method.destroy', $category->id) }}"
                                                     id="form-delete-product{{ $category->id }}">
 
-                                                    <a href="{{ route('use-method.edit', $category->id) }}"
+                                                    <a data-url="{{ route('use-method.edit', $category->id) }}" onclick="editer({{ $category->id }})"
                                                         class="fas fa-pen-alt"
+                                                        id="edit_{{ $category->id }}"
                                                         style="color: #217fff; margin-left: 5px; margin-right: 5px;"></a>
 
                                                     @csrf
@@ -101,7 +103,39 @@
         </div>
     </section>
 
-    @include('admin.methode.modale-create')
+    {{-- Modal create --}}
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title h4" style="text-align: center">{{ __("Creation des composants de la méthode") }}</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @include('admin.methode.modale-create')
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Modal edit --}}
+    <div class="modal fade" id="modal-edit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title h4" style="text-align: center">{{ __("Modification de la méthode") }}</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="body-edit">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 
@@ -109,7 +143,7 @@
 
 @section('dashboard-datatable-js')
     <!-- jQuery -->
-    <script src="{{ asset('dashboard-template/plugins/jquery/jquery.min.js') }}"></script>
+    
     <!-- Bootstrap 4 -->
 
     <!-- DataTables  & Plugins -->
@@ -216,5 +250,29 @@
             $('#save-category').prop("disabled", true);
             $('#form-category').submit();
         });
+
+
+        function editer(id){
+            let url = $('#edit_'+id).data('url');
+
+            let data = {};
+            console.log(url, data);
+            $('#loader').css('display', 'block');
+            $('#loader').html('<div class="text-center"><i style="z-index: 5000; color:green;font-size:30px;">Chargement....</i></div>');
+            $.ajax({
+                url,
+                data,
+                success: (data) => {
+                    console.log(data);
+                    // $('#edit_method').css('display', 'blog');
+                    $('#body-edit').html(data.view)
+                    $('#modal-edit').modal('show');
+                    $('#loader').css('display', 'none');
+                },
+                error: (xhr, exception) => {
+                    $('#loader').css('display', 'none');
+                }
+            })
+        }
     </script>
 @endsection

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Answer;
 use App\Repositories\AnswerRepository;
+use App\Repositories\CategoryRepository;
 use App\Repositories\QuestionnaireRepository;
 use App\Repositories\QuestionRepository;
+use Exception;
 use Illuminate\Http\Request;
 
 class AnswerController extends Controller
@@ -13,15 +15,18 @@ class AnswerController extends Controller
     private $answerRepository;
     private $questionnaireRepository;
     private $questionRepository;
+    private $categoryRepository;
 
     public function __construct(
         AnswerRepository $answerRepository,
         QuestionnaireRepository $questionnaireRepository,
-        QuestionRepository $questionRepository
+        QuestionRepository $questionRepository,
+        CategoryRepository $categoryRepository
     ) {
         $this->answerRepository = $answerRepository;
         $this->questionnaireRepository = $questionnaireRepository;
         $this->questionRepository = $questionRepository;
+        $this->categoryRepository = $categoryRepository;
     }
     /**
      * Display a listing of the resource.
@@ -74,40 +79,54 @@ class AnswerController extends Controller
     {
         $answer = $this->answerRepository->getById($id);
         $questionnaire = $this->questionnaireRepository->getById($answer->questionnaire->id);
-
+        // $categories = $this->categoryRepository->getCategoryByQuiz($questionnaire->id);
+        // dd($categories);
         #creation du tableau des labels du graph
         $labels = [];
         $datas = [];
-        foreach ($questionnaire->categories as $category) {
-            $labels = array_merge($labels, [$category->name]);
+        try {
+            foreach ($questionnaire->categories as $category) {
+                $labels = array_merge($labels, [$category->name]);
+                dd($category);
+                #calcul de la valeur de chaque catégory et construire les datas
+                $som = 0;
+                if (json_decode($answer->resultat)) {
+                    foreach (json_decode($answer->resultat) as $key => $value) {
+                        $id = explode("_", $key);
+                        $question = $this->questionRepository->getById($id[1]);
 
-            #calcul de la valeur de chaque catégory et construire les datas
-            $som = 0;
-            foreach (json_decode($answer->resultat) as $key => $value) {
-                $id = explode("_", $key);
-                $question = $this->questionRepository->getById($id[1]);
-
-                #tester si la question est dans la catégorie courrante
-                if ($question->category_id == $category->id) {
-                    #tester si la réponse du client correspond à la réponse attendue
-                    if ($question->response == $value) {
-                        $som += $question->cotation;
+                        #tester si la question est dans la catégorie courrante
+                        if ($question->category_id == $category->id) {
+                            #tester si la réponse du client correspond à la réponse attendue
+                            if ($question->response == $value) {
+                                $som += $question->cotation;
+                            }
+                        }
                     }
+                    $datas = array_merge($datas, [$som]);
+
+                    # Construction du tableau des couleurs
+                    $bgColor = [];
+                    $val = 10;
+                    foreach ($labels as $key => $value) {
+                        $val += $key + 8;
+                        $bgColor = array_merge($bgColor, ["rgb(255, $val, $val)"]);
+                    }
+                    
+                    if ($bilan) {
+                        return [$labels, $datas, $bgColor];
+                    }
+                } else {
+                    throw new Exception("Une erreur resultat");
                 }
+
             }
-            $datas = array_merge($datas, [$som]);
-        }
-
-        # Construction du tableau des couleurs
-        $bgColor =[];
-        $val = 10;
-        foreach ($labels as $key => $value) {
-            $val += $key + 8;
-            $bgColor = array_merge($bgColor, ["rgb(255, $val, $val)"]);
-        }
-
-        if ($bilan) {
-            return [$labels, $datas, $bgColor];
+        } catch (\Throwable $th) {
+            $notification = array(
+                'message' => "" . $th->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
         }
 
         return view('admin.answer.show', compact('answer', 'labels', 'datas', 'bgColor'));
@@ -152,15 +171,17 @@ class AnswerController extends Controller
         return redirect()->back()->with($notification);
     }
 
-    public function IndexGeneralReport(){
+    public function IndexGeneralReport()
+    {
         $answers = $this->answerRepository->getAll();
 
         #Questionnaires au status publié
         $questionnaires = $this->questionnaireRepository->getAll();
-        
+
         return view('admin.rapport-general.index', compact('questionnaires', 'answers'));
     }
-    public function generalReport($id){
+    public function generalReport($id)
+    {
         $answers = $this->answerRepository->getAll();
         $questionnaires = $this->questionnaireRepository->getAll(2);
 
@@ -174,23 +195,23 @@ class AnswerController extends Controller
             $res = $this->show($answer->id, true);
             $labels = $res[0];
 
-            for ($i=0; $i < count($res[1]); $i++) {
+            for ($i = 0; $i < count($res[1]); $i++) {
                 if (isset($datas[$i])) {
                     $datas[$i] += $res[1][$i];
-                } else{
+                } else {
                     $datas[$i] = $res[1][$i];
                 }
-                
+
             }
         }
-        
+
         #prendre la moyenne des datas trouvée
         if ($totalAnswer > 0) {
-            for ($i=0; $i < count($datas); $i++) { 
-                $datas[$i] = $datas[$i]/$totalAnswer;
+            for ($i = 0; $i < count($datas); $i++) {
+                $datas[$i] = $datas[$i] / $totalAnswer;
             }
         }
-        
+
         return view('admin.rapport-general.show', compact('questionnaire', 'labels', 'datas', 'answers', 'questionnaires'));
     }
 }

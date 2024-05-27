@@ -1,17 +1,18 @@
 <?php
 
-use App\Http\Controllers\AnswerController;
+use App\Models\Setting;
 use App\Models\Questionnaire;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LangController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\SolutionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QuestionnaireController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\SolutionController;
-use App\Http\Controllers\UserController;
-use App\Models\Setting;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/quiz-general/{id}/report', [AnswerController::class, 'generalReport'])->name('rapport.general.chart');
     Route::resource('/solution', SolutionController::class);
     Route::resource('/settings', SettingController::class);
+    Route::resource('/question', QuestionController::class);
     Route::get('/list-user', [UserController::class, 'index'])->name('list.all.user');
     Route::delete('/delete/{id}/user', [UserController::class, 'destroy'])->name('user.destroy');
 });

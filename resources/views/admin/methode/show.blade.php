@@ -12,6 +12,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('dashboard-template/dist/css/adminlte.min.css') }}">
 @endsection
+
 @section('content-css')
     <style>
         .error {
@@ -20,8 +21,6 @@
     </style>
 @endsection
 
-
-
 @section('dashboard-content')
     <section class="content mt-4">
         <div class="container-fluid">
@@ -29,11 +28,11 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">{{ __('Liste des solutions envisageables') }}</h3>
+                            <h3 class="card-title">{{ __('Questions lié : ') }}{{ $category->name }}</h3>
                             <div class="card-tools">
-                                {{-- <a href="{{ route('questionnaire.create')}}" class="btn btn-outline-success btn-sm"><span class="fa fa-plus"></span> Add</a> --}}
-                                <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal"
-                                    data-target="#modal-default"><span class="fa fa-plus"></span> Add</button>
+                                {{-- <a href="{{ route('use-method.create')}}" class="btn btn-outline-success btn-sm"><span class="fa fa-plus"></span> Add</a> --}}
+                                {{-- <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal"
+                                    data-target="#modal-default"><span class="fa fa-plus"></span> Add</button> --}}
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -41,65 +40,34 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th style="width: 10px">#</th>
-                                        <th>{{ __('Titre de la solution') }} </th>
-                                        <th>{{ __('Méthode (Quiz lié)') }} </th>
-                                        <th>{{ __('Marge') }} </th>
-                                        <th>{{ __('Description') }} </th>
-                                        <th>Action</th>
+
+                                        <th>{{ __('Nom de la méthode (Quiz lié)') }} </th>
+                                        <th colspan="{{ count($category->questions) + 1 }}">{{ __('Question lié') }} </th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @php
                                         $cpt = 1;
                                     @endphp
-                                    @forelse ($solutions as $solution)
+                                    <tr>
+
+                                        <td rowspan="{{ count($category->questions) + 1 }}">
+                                            {{ $category->name }}
+                                        </td>
+                                        <td colspan="{{ count($category->questions) + 1 }}">
+                                        @foreach ($category->questions as $question)
                                         <tr>
-                                            <td>{{ $cpt++ }}</td>
-                                            <td>{{ $solution->intitule }} </td>
-                                            <td>
-                                                @foreach ($solution->category as $category)
-                                                   <strong> {{ $category->name }}</strong>
-                                                    @foreach ($questionnaires as $item)
-                                                        @if ($item->id == $category->questionnaire_id)
-                                                            ({{ $item->name }})
-                                                        @endif
-                                                    @endforeach
-                                                     <br>
-                                                @endforeach
-                                            </td>
-
-                                            <td>
-                                                @foreach ($solution->category as $category)
-                                                    {{ ']' . $category->pivot->marge_inf . ', ' . $category->pivot->marge_sup . ']' }}
-                                                @endforeach
-                                            </td>
-                                            <td>
-                                                {{ $solution->description }}
-                                            </td>
-                                            <td style="display: flex !important;">
-
-                                                <form method="post"
-                                                    action="{{ route('solution.destroy', $solution->id) }}"
-                                                    id="form-delete-product{{ $solution->id }}">
-
-                                                    <a href="{{ route('solution.edit', $solution->id) }}"
-                                                        class="fas fa-pen-alt"
-                                                        style="color: #217fff; margin-left: 5px; margin-right: 5px;"></a>
-
-                                                    @csrf
-                                                    @method('delete')
-                                                    {{-- <span id="btn-delete-product{{ $solution->id }}"
-                                                        onclick="deleteProduct({{ $solution->id }})"
-                                                        class="fas fa-trash-alt" style="color: rgb(248, 38, 38)"></span> --}}
-                                                </form>
-                                            </td>
+                                            <td>{{ $question->intitule }}</td>
+                                            <td>{{ $question->cotation }}</td>
+                                            <td>{{ $question->response }}</td>
+                                            
                                         </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="6" style="text-align: center"> Aucun solution disponible</td>
-                                        </tr>
-                                    @endforelse
+                                        @endforeach
+                                    </td>
+
+                                    <tr>
+
 
 
                                 </tbody>
@@ -113,7 +81,7 @@
         </div>
     </section>
 
-    @include('admin.solution.modale-create')
+    @include('admin.methode.modale-create')
 @endsection
 
 
@@ -123,7 +91,7 @@
     <!-- jQuery -->
     <script src="{{ asset('dashboard-template/plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
-    {{-- <script src="{{ asset('js/custom.js') }}"></script> --}}
+
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('dashboard-template/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -137,6 +105,7 @@
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('js/custom.js') }}"></script>
 
 
     <script>
@@ -151,11 +120,13 @@
         });
 
         function deleteProduct(i) {
-            if (confirm('Voulez-vous supprimer cette solution ?')) {
+            if (confirm('Voulez-vous supprimer cette catégorie ?')) {
                 $('#form-delete-product' + i).submit();
             }
         }
+    </script>
 
+    <script>
         function ControlRequiredFields(inputs = $('.required')) {
             let success = true;
             console.log('nbre champ requis : ' + inputs.length);
@@ -172,23 +143,28 @@
             return success;
         }
 
-        $('#save-solution').click((e) => {
+
+        $("body").on("click", "#delete-line", function() {
+            $(this).parents("#block-question").remove();
+            console.log(1);
+        });
+
+        $('#save-category').click((e) => {
             e.preventDefault();
-            let min = $('#marge_inf').val();
-            let max = $('#marge_sup').val();
-            console.log("CF");
-            if (!ControlRequiredFields($('#solution-form .required'))) {
+            let inputs = $('.cotation');
+            let sommeCotation = 0;
+            if (!ControlRequiredFields($('#form-category .required'))) {
                 return 0;
             }
-            if (parseFloat(min) > parseFloat(max)) {
-                $('#error-marge').removeAttr('hidden');
-                return 0;
-            } else {
-                $('#error-marge').prop('hidden', true);
+            for (let i = 0; i < inputs.length; i++) {
+                sommeCotation += parseFloat($(inputs[i]).val());
             }
-
-            $('#solution-form').submit();
-
+            if (sommeCotation != 100) {
+                $('.error-cotation').removeAttr('hidden');
+                return 0;
+            }
+            $('#save-category').prop("disabled", true);
+            $('#form-category').submit();
         });
     </script>
 @endsection

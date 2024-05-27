@@ -46,7 +46,7 @@ class QuestionnaireController extends Controller
     public function store(Request $request)
     {
         $inputs = $request->all();
-
+dd($inputs);
         try {
             $this->questionnaireRepository->store($inputs);
         } catch (\Throwable $th) {
@@ -80,17 +80,43 @@ class QuestionnaireController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Questionnaire $questionnaire)
+    public function edit(Request $request, $id)
     {
-        //
+        $questionnaire = $this->questionnaireRepository->getQuestions($id);
+        $questionnaires = $this->questionnaireRepository->getAll();
+        $canRegister = $this->settingRepository->getByName("Activer l'enregistrement des utilisateurs");
+
+        if(isset($request->j_son)){
+            $view =view('admin.questionnaire.edit', compact('questionnaire'))->render();
+            return response()->json([
+                'view' => $view
+            ]);
+        }
+        return view('quiz', compact('questionnaire', 'questionnaires', 'canRegister'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Questionnaire $questionnaire)
+    public function update(Request $request, $id)
     {
-        //
+        $inputs = $request->all();
+
+        try {
+            $this->questionnaireRepository->update($id, $inputs);
+        } catch (\Throwable $th) {
+            $notification = array(
+                'message' => "une erreur s'est produite " . $th->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
+
+        $notification = array(
+            'message' => "Questionnaire mise à jour avec succès !",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     /**

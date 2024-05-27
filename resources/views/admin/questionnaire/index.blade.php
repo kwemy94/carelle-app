@@ -26,11 +26,12 @@
                             <div class="card-tools">
                                 {{-- <a href="{{ route('questionnaire.create')}}" class="btn btn-outline-success btn-sm"><span class="fa fa-plus"></span> Add</a> --}}
                                 <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal"
-                            data-target="#modal-default"><span class="fa fa-plus"></span> Add</button>
+                                    data-target="#modal-default"><span class="fa fa-plus"></span> Add</button>
                             </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <div id="loader"></div>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
@@ -49,23 +50,26 @@
                                         <tr>
                                             <td>{{ $cpt++ }}</td>
                                             <td>{{ $questionnaire->name }} </td>
-                                            
+
                                             <td>
                                                 {{ $questionnaire->description }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('publish.quiz', $questionnaire->id) }}" 
-                                                    class="{{ $questionnaire->status == 1? 'fa fa-eye' : 'fa fa-eye-slash' }}"
+                                                <a href="{{ route('publish.quiz', $questionnaire->id) }}"
+                                                    class="{{ $questionnaire->status == 1 ? 'fa fa-eye' : 'fa fa-eye-slash' }}"
                                                     title="Publier/Cacher"></a>
                                             </td>
                                             <td style="display: flex !important;">
-                                                
-                                                <form method="post" action="{{ route('questionnaire.destroy', $questionnaire->id) }}"
+
+                                                <form method="post"
+                                                    action="{{ route('questionnaire.destroy', $questionnaire->id) }}"
                                                     id="form-delete-product{{ $questionnaire->id }}">
-                                                    
-                                                    <a href="{{ route('questionnaire.edit', $questionnaire->id) }}" class="fas fa-pen-alt"
-                                                        style="color: #217fff; margin-left: 5px; margin-right: 5px;"></a>
-                                                        
+
+                                                    <a data-url="{{ route('questionnaire.edit', $questionnaire->id) }}"
+                                                        id ="edit_{{ $questionnaire->id }}" class="fas fa-pen-alt"
+                                                        style="color: #217fff; margin-left: 5px; margin-right: 5px;"
+                                                        onclick="edit({{ $questionnaire->id }})"></a>
+
                                                     @csrf
                                                     @method('delete')
                                                     {{-- <span id="btn-delete-product{{ $questionnaire->id }}"
@@ -76,13 +80,14 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="6" style="text-align: center"> Aucun questionnaire disponible</td>
+                                            <td colspan="6" style="text-align: center"> Aucun questionnaire disponible
+                                            </td>
                                         </tr>
                                     @endforelse
 
 
                                 </tbody>
-                                
+
                             </table>
                         </div>
                         <!-- /.card-body -->
@@ -92,16 +97,50 @@
         </div>
     </section>
 
-    @include('admin.questionnaire.modale-create')
+    {{-- Create modal --}}
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title h4" style="text-align: center">{{ __("Creation d'un questionnaire") }}</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @include('admin.questionnaire.modale-create')
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    {{-- Create Edit --}}
+    <div class="modal fade" id="modal-edit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title h4" style="text-align: center">{{ __("Editer le questionnaire") }}</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body-edit">
+                    
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
 @endsection
 
 
 
 
 @section('dashboard-datatable-js')
-    <!-- jQuery -->
-    <script src="{{ asset('dashboard-template/plugins/jquery/jquery.min.js') }}"></script>
-    <!-- Bootstrap 4 -->
 
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('dashboard-template/plugins/datatables/jquery.dataTables.min.js') }}"></script>
@@ -116,7 +155,6 @@
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-    
 
     <script>
         $(function() {
@@ -124,7 +162,7 @@
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
-                "buttons": [ "excel", "pdf"]
+                "buttons": ["excel", "pdf"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
         });
@@ -133,6 +171,31 @@
             if (confirm('Voulez-vous supprimer ce questionnaire ?')) {
                 $('#form-delete-product' + i).submit();
             }
+        }
+
+
+        function edit(id) {
+            let url = $('#edit_' + id).data('url');
+            let data = {j_son: 'true'};
+            
+            $('#loader').css('display', 'block');
+            $('#loader').html('<div class="text-center"><i style="z-index: 5000; color:green;font-size:30px;">Chargement....</i></div>');
+            $.ajax({
+                url,
+                data,
+                success: (data) => {
+                    console.log(data);
+                    // $('#edit_method').css('display', 'blog');
+                    $('.modal-body-edit').html(data.view)
+                    $('#modal-edit').modal('show');
+                    $('#loader').css('display', 'none');
+                },
+                error: (xhr, exception) => {
+                    $('#loader').css('display', 'none');
+                }
+            })
+
+
         }
     </script>
 @endsection
