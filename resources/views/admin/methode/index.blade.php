@@ -230,6 +230,7 @@
 
         $("body").on("click", "#delete-line", function() {
             $(this).parents("#block-question").remove();
+            $(this).parents(".block-question").remove();
             console.log(1);
         });
 

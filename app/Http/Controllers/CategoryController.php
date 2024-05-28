@@ -122,8 +122,42 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $inputs = $request->all();
-        dd($inputs);
+        $inputs = $request->except('lines');
+        $lines = $request->lines;
+        // dd($inputs, $lines);
+        try {
+            DB::transaction(function () use ($inputs, $lines, $id) {
+                $this->categoryRepository->update($id, $inputs);
+
+                foreach ($lines['question'] as $key => $value) {
+                    $question = [
+                        'intitule' => $value,
+                        'response' => $lines['response'][$key],
+                        'category_id' => $id,
+                        'cotation' => $lines['cotation'][$key]
+                    ];
+
+                    if(isset($lines['key_id'][$key])){
+                        $this->questionRepository->update($lines['key_id'][$key], $question);
+                    } else{
+                        $this->questionRepository->store($question);
+                    }
+
+                }
+            });
+        } catch (\Throwable $th) {
+            $notification = array(
+                'message' => "une erreur s'est produite " . $th->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
+
+        $notification = array(
+            'message' => "Catégorie mise à jour !",
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     /**

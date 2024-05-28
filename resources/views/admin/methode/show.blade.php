@@ -31,8 +31,8 @@
                             <h3 class="card-title">{{ __('Questions lié : ') }}{{ $category->name }}</h3>
                             <div class="card-tools">
                                 {{-- <a href="{{ route('use-method.create')}}" class="btn btn-outline-success btn-sm"><span class="fa fa-plus"></span> Add</a> --}}
-                                {{-- <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal"
-                                    data-target="#modal-default"><span class="fa fa-plus"></span> Add</button> --}}
+                                <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" id="edit_{{ $category->id }}"
+                                    data-target="#modal-edit" onclick="editer({{ $category->id }})" data-url={{ route('use-method.edit', $category->id) }}><span class="fa fa-pen"></span> Edit</button>
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -53,17 +53,17 @@
                                     <tr>
 
                                         <td rowspan="{{ count($category->questions) + 1 }}">
-                                            {{ $category->name }}
+                                            {{ $category->name }} ({{ $category->questionnaire->name }})
                                         </td>
                                         <td colspan="{{ count($category->questions) + 1 }}">
-                                        @foreach ($category->questions as $question)
-                                        <tr>
-                                            <td>{{ $question->intitule }}</td>
-                                            <td>{{ $question->cotation }}</td>
-                                            <td>{{ $question->response }}</td>
-                                            
-                                        </tr>
-                                        @endforeach
+                                            @foreach ($category->questions as $question)
+                                    <tr>
+                                        <td>{{ $question->intitule }}</td>
+                                        <td>{{ $question->cotation }}</td>
+                                        <td>{{ $question->response }}</td>
+
+                                    </tr>
+                                    @endforeach
                                     </td>
 
                                     <tr>
@@ -79,9 +79,23 @@
                 </div>
             </div>
         </div>
-    </section>
+        {{-- Modal edit --}}
+        <div class="modal fade" id="modal-edit">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <p class="modal-title h4" style="text-align: center">{{ __('Modification de la méthode') }}</p>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="body-edit">
 
-    @include('admin.methode.modale-create')
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection
 
 
@@ -89,7 +103,7 @@
 
 @section('dashboard-datatable-js')
     <!-- jQuery -->
-    <script src="{{ asset('dashboard-template/plugins/jquery/jquery.min.js') }}"></script>
+    
     <!-- Bootstrap 4 -->
 
     <!-- DataTables  & Plugins -->
@@ -105,7 +119,7 @@
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
+    {{-- <script src="{{ asset('js/custom.js') }}"></script> --}}
 
 
     <script>
@@ -125,7 +139,7 @@
             }
         }
     </script>
-
+    <script src="{{ asset('js/edit-category.js') }}"></script>
     <script>
         function ControlRequiredFields(inputs = $('.required')) {
             let success = true;
