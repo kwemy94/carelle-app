@@ -87,7 +87,7 @@ class AnswerController extends Controller
         try {
             foreach ($questionnaire->categories as $category) {
                 $labels = array_merge($labels, [$category->name]);
-                dd($category);
+                // dd($category);
                 #calcul de la valeur de chaque catégory et construire les datas
                 $som = 0;
                 if (json_decode($answer->resultat)) {
