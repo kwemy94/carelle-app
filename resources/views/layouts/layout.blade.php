@@ -44,7 +44,7 @@
     <link href="{{ asset('front-end/assets/libs/simplebar/dist/simplebar.min.css') }}" rel="stylesheet">
 
     {{-- toast alert --}}
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet"> --}}
 
 
     <!-- Theme CSS -->
@@ -86,7 +86,7 @@
     <script src="{{ asset('front-end/assets/libs/simplebar/dist/simplebar.min.js') }}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script>
+    {{-- <script>
         @if (Session::has('message'))
             var type = "{{ Session::get('alert-type', 'info') }}"
             switch (type) {
@@ -123,7 +123,7 @@
                     break;
             }
         @endif
-    </script>
+    </script> --}}
     @yield('front-js')
     <!-- Theme JS -->
     <script src="{{ asset('front-end/assets/js/theme.min.js') }}"></script>
