@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\Setting;
+use App\Models\ErrorManager;
 use App\Models\Questionnaire;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LangController;
 use App\Http\Controllers\UserController;
@@ -55,6 +57,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('/question', QuestionController::class);
     Route::get('/list-user', [UserController::class, 'index'])->name('list.all.user');
     Route::delete('/delete/{id}/user', [UserController::class, 'destroy'])->name('user.destroy');
+
+    Route::get('/error-manager', function(){
+        $errorManagers = DB::table('error_managers')
+        -> orderBy('created_at', 'desc')
+        -> get();
+        return view('admin.error-manager.index', compact('errorManagers'));
+    })->name('error.manager');
 });
 
 Route::get('quiz/{id}/chouse', [QuestionnaireController::class, 'show'])->name('show-quiz-selected');

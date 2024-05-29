@@ -30,6 +30,7 @@ class UserController extends Controller
             $user = $this->userRepository->getById($id);
             $user->delete();
         } catch (\Throwable $th) {
+            errorManager("error delete user : ", $th, $th);
             $notification = array(
                 'message' => "une erreur s'est produite " . $th->getMessage(),
                 'alert-type' => 'error'

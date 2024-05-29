@@ -69,6 +69,7 @@ class SettingController extends Controller
                 $this->settingRepository->update($id[1], ['status' => $value]);
             }
         } catch (\Throwable $th) {
+            errorManager("error update setting : ", $th, $th);
             $notification = array(
                 'message' => "une erreur s'est produite " . $th->getMessage(),
                 'alert-type' => 'error'

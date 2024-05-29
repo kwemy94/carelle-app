@@ -63,6 +63,7 @@ class SolutionController extends Controller
             });
             
         } catch (\Throwable $th) {
+            errorManager("store error solution : ", $th, $th);
             $notification = array(
                 'message' => "une erreur s'est produite " . $th->getMessage(),
                 'alert-type' => 'error'

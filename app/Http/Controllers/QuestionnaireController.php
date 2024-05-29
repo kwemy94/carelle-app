@@ -46,10 +46,11 @@ class QuestionnaireController extends Controller
     public function store(Request $request)
     {
         $inputs = $request->all();
-dd($inputs);
+
         try {
             $this->questionnaireRepository->store($inputs);
         } catch (\Throwable $th) {
+            errorManager("store questionnaire error : ", $th, $th);
             $notification = array(
                 'message' => "une erreur s'est produite " . $th->getMessage(),
                 'alert-type' => 'error'
@@ -105,6 +106,7 @@ dd($inputs);
         try {
             $this->questionnaireRepository->update($id, $inputs);
         } catch (\Throwable $th) {
+            errorManager("Update questionnaire : ", $th, $th);
             $notification = array(
                 'message' => "une erreur s'est produite " . $th->getMessage(),
                 'alert-type' => 'error'
@@ -127,6 +129,7 @@ dd($inputs);
         try {
             $questionnaire->delete();
         } catch (\Throwable $th) {
+            errorManager("Error delete questionnaire : ", $th, $th);
             $notification = array(
                 'message' => "une erreur s'est produite " . $th->getMessage(),
                 'alert-type' => 'error'
@@ -153,6 +156,7 @@ dd($inputs);
             }
             $this->questionnaireRepository->update($id, ['status' => $status]);
         } catch (\Throwable $th) {
+            errorManager("error publish quiz : ", $th, $th);
             $notification = array(
                 'message' => "une erreur s'est produite " . $th->getMessage(),
                 'alert-type' => 'error'

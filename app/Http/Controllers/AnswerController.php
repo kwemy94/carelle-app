@@ -58,6 +58,7 @@ class AnswerController extends Controller
             // dd($inputs);
             $this->answerRepository->store($inputs);
         } catch (\Throwable $th) {
+            errorManager("Store answer : ", $th, $th);
             $notification = array(
                 'message' => "une erreur s'est produite",
                 'alert-type' => 'error'
@@ -65,7 +66,7 @@ class AnswerController extends Controller
             return redirect()->back()->with($notification);
         }
         $notification = array(
-            'message' => "Vos réponses ont été enregistrées!",
+            'message' => "Merci d'avoir répondu au quiz!",
             'alert-type' => 'success'
         );
         return redirect()->route('home')->with($notification);
@@ -89,7 +90,7 @@ class AnswerController extends Controller
                 $labels = array_merge($labels, [$category->name]);
                 // dd($category);
                 #calcul de la valeur de chaque catégory et construire les datas
-                $som = 0;
+                $som = 0; 
                 if (json_decode($answer->resultat)) {
                     foreach (json_decode($answer->resultat) as $key => $value) {
                         $id = explode("_", $key);
@@ -117,11 +118,12 @@ class AnswerController extends Controller
                         return [$labels, $datas, $bgColor];
                     }
                 } else {
-                    throw new Exception("Une erreur resultat");
+                    throw new Exception("Le client à soumis un formulaire vide");
                 }
 
             }
         } catch (\Throwable $th) {
+            errorManager("listing bilan : ", $th, $th);
             $notification = array(
                 'message' => "" . $th->getMessage(),
                 'alert-type' => 'error'
@@ -158,14 +160,15 @@ class AnswerController extends Controller
             $answer->delete();
         } catch (\Throwable $th) {
             $notification = array(
-                'message' => "Réponse du quiz supprimée ! " . $th->getMessage(),
+                'message' => "Supprimer réponse quiz ! " . $th->getMessage(),
                 'alert-type' => 'error'
             );
+            errorManager("listing bilan : ", $th, $th);
             return redirect()->back()->with($notification);
         }
 
         $notification = array(
-            'message' => "Questionnaire crée !",
+            'message' => "Réponse supprimée !",
             'alert-type' => 'success'
         );
         return redirect()->back()->with($notification);

@@ -76,6 +76,7 @@ class CategoryController extends Controller
                 }
             });
         } catch (\Throwable $th) {
+            errorManager("Store category error : ", $th, $th);
             $notification = array(
                 'message' => "une erreur s'est produite " . $th->getMessage(),
                 'alert-type' => 'error'
@@ -169,6 +170,7 @@ class CategoryController extends Controller
             $category = $this->categoryRepository->getById($id);
             $category->delete();
         } catch (\Throwable $th) {
+            errorManager("Suppression catégorie : ", $th, $th);
             $notification = array(
                 'message' => "une erreur s'est produite " . $th->getMessage(),
                 'alert-type' => 'error'
