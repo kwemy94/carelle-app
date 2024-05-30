@@ -25,7 +25,8 @@
                     <!-- PIE CHART -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Resultat du Client {{ $answer->id }}</h3>
+                            <h3 class="card-title">Resultat du Client {{ $answer->id }}. Quiz :
+                                {{ $answer->questionnaire->name }}</h3>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -54,19 +55,51 @@
                         {{-- /.card-header --}}
                         <div class="card-body">
                             <div class="row">
-                                @foreach ($labels as $label)
-                                    <div class="col-sm-4">
-                                        <div class="position-relative p-3 bg-gray" style="height: 180px">
-                                            <div class="ribbon-wrapper">
-                                                <div class="ribbon bg-success">
-                                                    {{ $label }}
+                                @if (count($dataSolutions) != 0)
+                                    @php
+                                        $existLabels = [];
+                                    @endphp
+
+                                    @foreach ($dataSolutions as $key => $solution)
+                                        @php
+                                            $existLabels = array_merge($existLabels, [$key]);
+                                        @endphp
+                                        <div class="col-sm-4">
+                                            <div class="position-relative p-3 bg-gray" style="height: 180px">
+                                                <div class="ribbon-wrapper">
+                                                    <div class="ribbon bg-success">
+                                                        {{ $key }}
+                                                    </div>
+                                                </div>
+                                                @if (isset($dataSolutions[$key]))
+                                                    <small>{{ $dataSolutions[$key] }}</small>
+                                                @else
+                                                    <small>Faites une analyse selon le diagramme de résultat
+                                                        ci-contre.</small>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                    @foreach ($labels as $item)
+                                        @if (!in_array($item, $existLabels))
+                                            <div class="col-sm-4">
+                                                <div class="position-relative p-3 bg-gray" style="height: 180px">
+                                                    <div class="ribbon-wrapper">
+                                                        <div class="ribbon bg-success">
+                                                            {{ $item }}
+                                                        </div>
+                                                    </div>
+                                                    <small>Faites une analyse selon le diagramme de résultat
+                                                        ci-contre.</small>
                                                 </div>
                                             </div>
-                                            XXX Solution <br />
-                                            <small>YYY Amélioration</small>
-                                        </div>
-                                    </div>
-                                @endforeach
+                                        @endif
+                                    @endforeach
+                                @else
+                                    <small>Faites une analyse selon le diagramme de résultat ci-contre.</small>
+                                @endif
+
                             </div>
                         </div>
                         {{-- /.card-body --}}
@@ -129,7 +162,7 @@
 
             labels: @json($labels),
             datasets: [{
-                label: 'Client '+@json($answer->id),
+                label: 'Client ' + @json($answer->id),
 
                 data: @json($datas),
                 backgroundColor: [

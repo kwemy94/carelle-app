@@ -53,7 +53,7 @@
                         </div>
                         {{-- /.card-header --}}
                         <div class="card-body">
-                            <div class="row">
+                            {{-- <div class="row">
                                 @foreach ($questionnaire->categories as $category)
                                     <div class="col-sm-4">
                                         <div class="position-relative p-3 bg-gray" style="height: 180px">
@@ -67,7 +67,7 @@
                                         </div>
                                     </div>
                                 @endforeach
-                            </div>
+                            </div> --}}
                         </div>
                         {{-- /.card-body --}}
                     </div>

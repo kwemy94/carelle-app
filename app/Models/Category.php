@@ -19,7 +19,7 @@ class Category extends Model
         return $this->hasMany(Question::class);
     }
 
-    public function solution(){
-        return $this->belongsToMany(Solution::class);
+    public function solutions(){
+        return $this->belongsToMany(Solution::class)->withPivot('marge_inf', 'marge_sup');
     }
 }

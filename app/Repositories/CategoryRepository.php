@@ -12,7 +12,7 @@ class CategoryRepository extends ResourceRepository {
     }
 
     public function getById($id) {
-        return $this->model->with('questions','questionnaire')->where('id', $id)->first();
+        return $this->model->with('questions','questionnaire', 'solutions')->where('id', $id)->first();
     }
 
     public function getAll() 
@@ -23,5 +23,7 @@ class CategoryRepository extends ResourceRepository {
     {
         return $this->model->where('questionnaire_id', $id)->with('solution')->orderBy('id', 'DESC')->get();
     }
+
+    // public function getByCategory($categoryI)
 
 }

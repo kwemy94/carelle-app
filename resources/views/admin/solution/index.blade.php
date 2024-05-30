@@ -38,6 +38,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <div id="loader"></div>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
@@ -83,9 +84,10 @@
                                                     action="{{ route('solution.destroy', $solution->id) }}"
                                                     id="form-delete-product{{ $solution->id }}">
 
-                                                    <a href="{{ route('solution.edit', $solution->id) }}"
+                                                    {{-- <a data-url="{{ route('solution.edit', $solution->id) }}" id="edit_{{ $solution->id }}"
                                                         class="fas fa-pen-alt"
-                                                        style="color: #217fff; margin-left: 5px; margin-right: 5px;"></a>
+                                                        onclick="edit({{ $solution->id }})"
+                                                        style="color: #217fff; margin-left: 5px; margin-right: 5px;"></a> --}}
 
                                                     @csrf
                                                     @method('delete')
@@ -113,7 +115,42 @@
         </div>
     </section>
 
-    @include('admin.solution.modale-create')
+    {{-- Modal create --}}
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title h4" style="text-align: center">{{ __("Creation d'une solution") }}</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @include('admin.solution.modale-create')
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="modal-edit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title h4" style="text-align: center">{{ __("Creation d'une solution") }}</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="body-edit">
+                    
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 @endsection
 
 
@@ -121,7 +158,7 @@
 
 @section('dashboard-datatable-js')
     <!-- jQuery -->
-    <script src="{{ asset('dashboard-template/plugins/jquery/jquery.min.js') }}"></script>
+    
     <!-- Bootstrap 4 -->
     {{-- <script src="{{ asset('js/custom.js') }}"></script> --}}
     <!-- DataTables  & Plugins -->
@@ -190,5 +227,29 @@
             $('#solution-form').submit();
 
         });
+
+        function edit(id) {
+            let url = $('#edit_' + id).data('url');
+            let data = {j_son: 'true'};
+            
+            $('#loader').css('display', 'block');
+            $('#loader').html('<div class="text-center"><i style="z-index: 5000; color:green;font-size:30px;">Chargement....</i></div>');
+            $.ajax({
+                url,
+                data,
+                success: (data) => {
+                    console.log(data);
+                    // $('#edit_method').css('display', 'blog');
+                    $('#body-edit').html(data.view)
+                    $('#modal-edit').modal('show');
+                    $('#loader').css('display', 'none');
+                },
+                error: (xhr, exception) => {
+                    $('#loader').css('display', 'none');
+                }
+            })
+
+
+        }
     </script>
 @endsection

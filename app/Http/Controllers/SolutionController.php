@@ -89,9 +89,16 @@ class SolutionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Solution $solution)
+    public function edit( $id)
     {
-        //
+        $solution = $this->solutionRepository->getById($id);
+        $categories = $this->categoryRepository->getAll();
+// dd($solution);
+        $view = view('admin.solution.edit', compact('solution', 'categories'))->render();
+
+        return response()->json([
+            'view' => $view
+        ]);
     }
 
     /**

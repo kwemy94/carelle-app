@@ -7,6 +7,7 @@ use App\Repositories\AnswerRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\QuestionnaireRepository;
 use App\Repositories\QuestionRepository;
+use App\Repositories\SolutionRepository;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -16,17 +17,20 @@ class AnswerController extends Controller
     private $questionnaireRepository;
     private $questionRepository;
     private $categoryRepository;
+    private $solutionRepository;
 
     public function __construct(
         AnswerRepository $answerRepository,
         QuestionnaireRepository $questionnaireRepository,
         QuestionRepository $questionRepository,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        SolutionRepository $solutionRepository
     ) {
         $this->answerRepository = $answerRepository;
         $this->questionnaireRepository = $questionnaireRepository;
         $this->questionRepository = $questionRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->solutionRepository = $solutionRepository;
     }
     /**
      * Display a listing of the resource.
@@ -80,11 +84,11 @@ class AnswerController extends Controller
     {
         $answer = $this->answerRepository->getById($id);
         $questionnaire = $this->questionnaireRepository->getById($answer->questionnaire->id);
-        // $categories = $this->categoryRepository->getCategoryByQuiz($questionnaire->id);
-        // dd($categories);
+        
         #creation du tableau des labels du graph
         $labels = [];
         $datas = [];
+        $dataSolutions = [];
         try {
             foreach ($questionnaire->categories as $category) {
                 $labels = array_merge($labels, [$category->name]);
@@ -106,6 +110,20 @@ class AnswerController extends Controller
                     }
                     $datas = array_merge($datas, [$som]);
 
+                    #recupérer la solution qui cadre avec la réponse
+                    $cat = $this->categoryRepository->getById($category->id);
+                    // dump($datas);
+                    if ($cat->solutions) {
+                        foreach ($cat->solutions as $solution) {
+                            // dump($som,$solution->pivot->marge_inf, $solution->pivot->marge_sup);
+                            if($solution->pivot->marge_inf < $som && $som <= $solution->pivot->marge_sup ){
+                                $dataSolutions = array_merge($dataSolutions, [$category->name => $solution->intitule.' : '.$solution->description]);
+                            }
+                        }
+                    }else{
+                        $dataSolutions = array_merge($dataSolutions, ["Faites une analyse manuel de ce résultat"]);
+                    }
+                    
                     # Construction du tableau des couleurs
                     $bgColor = [];
                     $val = 10;
@@ -115,14 +133,15 @@ class AnswerController extends Controller
                     }
                     
                     if ($bilan) {
-                        return [$labels, $datas, $bgColor];
+                        return [$labels, $datas, $bgColor, $dataSolutions];
                     }
                 } else {
                     throw new Exception("Le client à soumis un formulaire vide");
                 }
 
             }
-        } catch (\Throwable $th) {
+            // dd($dataSolutions);
+        } catch (Exception $th) {
             errorManager("listing bilan : ", $th, $th);
             $notification = array(
                 'message' => "" . $th->getMessage(),
@@ -131,7 +150,7 @@ class AnswerController extends Controller
             return redirect()->back()->with($notification);
         }
 
-        return view('admin.answer.show', compact('answer', 'labels', 'datas', 'bgColor'));
+        return view('admin.answer.show', compact('answer', 'dataSolutions', 'labels', 'datas', 'bgColor'));
     }
 
     /**

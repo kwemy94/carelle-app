@@ -15,5 +15,8 @@ class SolutionRepository extends ResourceRepository {
     {
         return $this->model->with('category')->orderBy('id', 'DESC')->get();
     }
+    public function getById($id) {
+        return $this->model->with('category')->where('id', $id)->first();
+    }
 
 }
