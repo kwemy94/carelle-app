@@ -52,7 +52,7 @@
                                             <td>{{ $questionnaire->name }} </td>
 
                                             <td>
-                                                {{ $questionnaire->description }}
+                                                {!! $questionnaire->description !!}
                                             </td>
                                             <td>
                                                 <a href="{{ route('publish.quiz', $questionnaire->id) }}"
@@ -121,27 +121,31 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <p class="modal-title h4" style="text-align: center">{{ __("Editer le questionnaire") }}</p>
+                    <p class="modal-title h4" style="text-align: center">{{ __('Editer le questionnaire') }}</p>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body-edit">
-                    
+
                 </div>
             </div>
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
     </div>
-
 @endsection
 
 
 
-
+@section('content-js')
+    <script>
+        $(document).ready(function() {
+            $('#summernote').summernote();
+        });
+    </script>
+@endsection
 @section('dashboard-datatable-js')
-
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('dashboard-template/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('dashboard-template/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -176,10 +180,14 @@
 
         function edit(id) {
             let url = $('#edit_' + id).data('url');
-            let data = {j_son: 'true'};
-            
+            let data = {
+                j_son: 'true'
+            };
+
             $('#loader').css('display', 'block');
-            $('#loader').html('<div class="text-center"><i style="z-index: 5000; color:green;font-size:30px;">Chargement....</i></div>');
+            $('#loader').html(
+                '<div class="text-center"><i style="z-index: 5000; color:green;font-size:30px;">Chargement....</i></div>'
+                );
             $.ajax({
                 url,
                 data,
@@ -187,6 +195,7 @@
                     console.log(data);
                     // $('#edit_method').css('display', 'blog');
                     $('.modal-body-edit').html(data.view)
+                    $('.summernote').summernote();
                     $('#modal-edit').modal('show');
                     $('#loader').css('display', 'none');
                 },

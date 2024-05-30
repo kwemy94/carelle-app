@@ -42,9 +42,10 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="description">Description</label>
-            <input type="text" class="form-control form-control-border border-width-2" name="description"
-                id="description" value="{{ $solution->description }}">
+            <label for="summernote">Description</label>
+            <textarea name="description" class="form-control summernote" id="summernote" rows="4">
+            {!! asset($solution)? $solution->description : '' !!}
+            </textarea>
         </div>
 
     </div>

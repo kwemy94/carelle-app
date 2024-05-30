@@ -36,9 +36,10 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="description">Description</label>
-            <input type="text" class="form-control form-control-border border-width-2" name="description"
-                id="description">
+            <label for="summernote">Description</label>
+            <textarea name="description" class="form-control" id="summernote" rows="4">
+            
+            </textarea>
         </div>
 
     </div>

@@ -76,7 +76,7 @@
                                                 @endforeach
                                             </td>
                                             <td>
-                                                {{ $solution->description }}
+                                                {!! $solution->description !!}
                                             </td>
                                             <td style="display: flex !important;">
 
@@ -155,7 +155,13 @@
 
 
 
-
+@section('content-js')
+    <script>
+        $(document).ready(function() {
+            $('#summernote').summernote();
+        });
+    </script>
+@endsection
 @section('dashboard-datatable-js')
     <!-- jQuery -->
     
@@ -240,7 +246,8 @@
                 success: (data) => {
                     console.log(data);
                     // $('#edit_method').css('display', 'blog');
-                    $('#body-edit').html(data.view)
+                    $('#body-edit').html(data.view);
+                    $('.summernote').summernote();
                     $('#modal-edit').modal('show');
                     $('#loader').css('display', 'none');
                 },

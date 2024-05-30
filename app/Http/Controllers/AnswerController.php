@@ -132,13 +132,18 @@ class AnswerController extends Controller
                         $bgColor = array_merge($bgColor, ["rgb(255, $val, $val)"]);
                     }
                     
-                    if ($bilan) {
-                        return [$labels, $datas, $bgColor, $dataSolutions];
-                    }
                 } else {
                     throw new Exception("Le client à soumis un formulaire vide");
                 }
-
+            }
+            // dd($labels);
+            if ($bilan) {
+                return [
+                    'labels' => $labels,
+                    'datas' => $datas,
+                    'bgColor' => $bgColor,
+                    'dataSolutions' => $dataSolutions
+                ];
             }
             // dd($dataSolutions);
         } catch (Exception $th) {
@@ -215,17 +220,19 @@ class AnswerController extends Controller
         $datas = array();
         foreach ($questionnaire->answers as $answer) {
             $res = $this->show($answer->id, true);
-            $labels = $res[0];
-
-            for ($i = 0; $i < count($res[1]); $i++) {
+            $labels = $res['labels'];
+            
+            for ($i = 0; $i < count($labels); $i++) {
                 if (isset($datas[$i])) {
-                    $datas[$i] += $res[1][$i];
+                    $datas[$i] += $res['datas'][$i];
                 } else {
-                    $datas[$i] = $res[1][$i];
+                    $datas[$i] = $res['datas'][$i];
                 }
-
+                
             }
         }
+        $dataSolutions = $res['dataSolutions'];
+        // dd($dataSolutions);
 
         #prendre la moyenne des datas trouvée
         if ($totalAnswer > 0) {
@@ -234,6 +241,6 @@ class AnswerController extends Controller
             }
         }
 
-        return view('admin.rapport-general.show', compact('questionnaire', 'labels', 'datas', 'answers', 'questionnaires'));
+        return view('admin.rapport-general.show', compact('dataSolutions', 'questionnaire', 'labels', 'datas', 'answers', 'questionnaires'));
     }
 }

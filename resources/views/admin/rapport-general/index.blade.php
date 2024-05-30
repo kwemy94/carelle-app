@@ -57,7 +57,7 @@
                                                 @endforeach
                                             </td>
                                             <td>
-                                                {{ $questionnaire->description }}
+                                                {!! $questionnaire->description !!}
                                             </td>
                                             {{-- <td style="display: flex !important;">
 
