@@ -84,7 +84,6 @@ class ProfileController extends Controller
             DB::table('users')
                 ->where('id', $user->id)
                 ->update(['avatar' => $fileName]);
-
             
         } catch (\Exception $e) {
             errorManager('Echec mise à jour avatar : ', $e, $e);
