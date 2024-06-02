@@ -1,109 +1,72 @@
 @extends('layouts.app')
 
 @section('dashboard-content')
-    {{-- <x-app-layout>
-        <x-slot name="header">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Profile') }}
-            </h2>
-        </x-slot>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <div class="max-w-xl">
-                        @include('profile.partials.update-profile-information-form')
-                    </div>
-                </div>
-
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <div class="max-w-xl">
-                        @include('profile.partials.update-password-form')
-                    </div>
-                </div>
-
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <div class="max-w-xl">
-                        @include('profile.partials.delete-user-form')
-                    </div>
-                </div>
-            </div>
-        </div>
-    </x-app-layout> --}}
-
-    <section class="content mt-2">
+    <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-6">
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">{{ __('Profile Information') }}</h3>
-                        </div>
-                        {{-- @include('profile.partials.update-profile-information-form') --}}
-                        <form method="post" action="{{ route('profile.update') }}">
-                            @csrf
-                            @method('patch')
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="name">{{ __('auth.name') }} </label>
-                                    <input type="text" class="form-control" name="name" id="name"
-                                        value="{{ old('name', $user->name) }}" required autofocus autocomplete="name">
-                                    <span class="mt-2" :messages="$errors->get('name')"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Email address</label>
-                                    <input type="email" name="email" class="form-control" id="email"
-                                        value="{{ old('email', $user->email) }}" required autocomplete="username">
-                                    <span class="mt-2" :messages="$errors->get('email')"></span>
-                                </div>
-                            </div>
-                            
+                <div class="col-md-3">
 
-                            <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                    <!-- Profile Image -->
+                    <div class="card card-primary card-outline">
+                        <div class="card-body box-profile">
+                            <div class="text-center">
+                                <img class="profile-user-img img-fluid img-circle"
+                                    src='{{ asset("storage/dashboard-template/dist/img/".$user->avatar) }}' alt="User profile">
                             </div>
-                        </form>
+
+                            <ul class="list-group list-group-unbordered mb-3">
+                                <li class="list-group-item">
+                                    <form class="form-horizontal" method="POST" action="{{ route('update-avatar') }}" enctype="multipart/form-data">
+                                        @csrf
+                                        @method('put')
+                                        <div class="form-group">
+                                            <label for="exampleInputFile">Photo de profile</label>
+                                            <div class="input-group">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" name="avatar" id="exampleInputFile" accept="image/*" required>
+                                                    <label class="custom-file-label" for="exampleInputFile">Choisir le fichier</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit"
+                                            class="btn btn-primary btn-sm btn-block"><b>Enregistrer</b></button>
+                                    </form>
+                                </li>
+                            </ul>
+
+                        </div>
+                        <!-- /.card-body -->
                     </div>
+                    <!-- /.card -->
+
 
                 </div>
-                <div class="col-md-6">
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">{{ __('Update password') }}</h3>
+                <!-- /.col -->
+                <div class="col-md-9">
+                    <div class="card">
+                        <div class="card-header p-2">
+                            <ul class="nav nav-pills">
+                                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Profile
+                                        information</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Mot de passe</a>
+                                </li>
+                            </ul>
+                        </div><!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="active tab-pane" id="activity">
+                                    @include('profile.partials.update-profile-information-form')
+                                </div>
+
+                                <div class="tab-pane" id="timeline">
+                                    @include('profile.partials.update-password-form')
+                                </div>
+
+                            </div>
+
                         </div>
-                        
-                        <form method="post" action="{{ route('password.update') }}">
-                            @csrf
-                            @method('put')
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="current_password">{{ __('Current Password') }} </label>
-                                    <input type="password" name="current_password" class="form-control" id="current_password"
-                                        value="" required>
-                                    <span class="mt-2" :messages="$errors->updatePassword->get('current_password')"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="password">{{ __('New Password') }} </label>
-                                    <input type="password" name="password" class="form-control" id="password"
-                                        required>
-                                    <span class="mt-2" :messages="$errors->updatePassword->get('password')"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="password_confirmation">{{ __('Confirm Password') }} </label>
-                                    <input type="password" name="password_confirmation" class="form-control" id="password_confirmation"
-                                        value="" required>
-                                    <span class="mt-2" :messages="$errors->updatePassword->get('password_confirmation')"></span>
-                                </div>
-                            </div>
-
-                            <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                        </form>
                     </div>
-
                 </div>
-                
             </div>
         </div>
     </section>

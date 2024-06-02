@@ -38,6 +38,7 @@
                                         <th>{{ __('Client') }} </th>
                                         <th>{{ __('Questionnaire') }} </th>
                                         <th>{{ __('Observation') }} </th>
+                                        <th>{{ __('Date de soumission') }} </th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -55,6 +56,9 @@
                                             </td>
                                             <td>
                                                 {{ $answer->observation }}
+                                            </td>
+                                            <td>
+                                                {{ date('Y-m-d', strtotime($answer->created_at)) }}
                                             </td>
                                             <td style="display: flex !important;">
 

@@ -59,7 +59,23 @@ class AnswerController extends Controller
         try {
             $inputs = $request->except('lines');
             $inputs['resultat'] = json_encode($request->lines);
-            // dd($inputs);
+            $quiz = $this->questionnaireRepository->getById($request->questionnaire_id);
+            // dd($request->lines);
+            if (is_null($request->lines) ) {
+                $notification = array(
+                    'message' => "Vous n'avez pas remplis le formulaire",
+                    'alert-type' => 'error'
+                );
+                return redirect()->back()->with($notification);
+            }
+            if (count($request->lines) != count($quiz->questions)) {
+                $notification = array(
+                    'message' => "Tous les champs du formulaire sont obligataires",
+                    'alert-type' => 'error'
+                );
+                return redirect()->back()->with($notification);
+            }
+            // dd($inputs,count($request->lines), count($quiz->questions));
             $this->answerRepository->store($inputs);
         } catch (\Throwable $th) {
             errorManager("Store answer : ", $th, $th);
@@ -70,7 +86,7 @@ class AnswerController extends Controller
             return redirect()->back()->with($notification);
         }
         $notification = array(
-            'message' => "Merci d'avoir répondu au quiz!",
+            'message' => "Merci d'avoir répondu à notre quiz!",
             'alert-type' => 'success'
         );
         return redirect()->route('home')->with($notification);

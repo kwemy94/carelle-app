@@ -64,6 +64,8 @@ Route::middleware('auth')->group(function () {
         -> get();
         return view('admin.error-manager.index', compact('errorManagers'));
     })->name('error.manager');
+
+    Route::put('/avatar-updtate', [ProfileController::class, 'updateAvatar'])->name('update-avatar');
 });
 
 Route::get('quiz/{id}/chouse', [QuestionnaireController::class, 'show'])->name('show-quiz-selected');
