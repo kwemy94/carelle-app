@@ -1,8 +1,6 @@
 <form method="POST" action="{{ route('questionnaire.store') }}" id="quiz-form">
     @csrf
-    <div id="edit_method" style="display: none">
-        @method('PUT')
-    </div>
+    
     <div class="card-body" >
         <div class="form-group">
             <label for="name">{{ __('Intitulé du questionnaire') }} <em style="color:red">*</em></label>
