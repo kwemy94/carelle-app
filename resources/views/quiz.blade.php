@@ -64,7 +64,9 @@
                                     </div>
                                 </div>
                                 <div class="mt-5">
-                                    <input class="form-control" type="text" name="name" id="fname" placeholder="Nom d'utilisateur (facultatif)" />
+                                    @if (count($questionnaire->questions) != 0)
+                                        <input class="form-control" type="text" name="name" id="fname" placeholder="Nom d'utilisateur (facultatif)" />
+                                    @endif
                                 </div>
 
                                 @php
