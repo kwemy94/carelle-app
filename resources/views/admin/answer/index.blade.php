@@ -49,7 +49,7 @@
                                     @forelse ($answers as $answer)
                                         <tr>
                                             <td>{{ $cpt++ }}</td>
-                                            <td><a href="{{ route('quiz-answer.show', $answer->id) }}">Client {{ $answer->id }}</a> </td>
+                                            <td><a href="{{ route('quiz-answer.show', $answer->id) }}">{{ isset($answer->name)? $answer->name : 'Client '.$answer->id }}</a> </td>
 
                                             <td>
                                                 {{ $answer->questionnaire->name }}

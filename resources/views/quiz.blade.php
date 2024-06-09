@@ -60,7 +60,11 @@
                                                 <a href="#" class="text-inherit">{{ $questionnaire->name }}</a>
                                             </h3>
                                         </div>
+                                        
                                     </div>
+                                </div>
+                                <div class="mt-5">
+                                    <input class="form-control" type="text" name="name" id="fname" placeholder="Nom d'utilisateur (facultatif)" />
                                 </div>
 
                                 @php

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Category;
-use App\Repositories\AnswerRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Repositories\AnswerRepository;
 use App\Repositories\CategoryRepository;
-use App\Repositories\QuestionnaireRepository;
 use App\Repositories\QuestionRepository;
+use App\Repositories\QuestionnaireRepository;
 
 class CategoryController extends Controller
 {
@@ -57,11 +58,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $inputs = $request->except('lines');
         $lines = $request->lines;
         // dd($inputs, $lines);
         try {
-            DB::transaction(function () use ($inputs, $lines) {
+            DB::transaction(function () use ($inputs, $lines, $request) {
                 $category = $this->categoryRepository->store($inputs);
 
                 foreach ($lines['question'] as $key => $value) {
@@ -69,16 +71,32 @@ class CategoryController extends Controller
                         'intitule' => $value,
                         'response' => $lines['response'][$key],
                         'category_id' => $category->id,
-                        'cotation' => $lines['cotation'][$key]
+                        // 'cotation' => $lines['cotation'][$key]
+                        'cotation' => 0,
+                        'type' => $lines['type'][$key]
                     ];
 
                     $this->questionRepository->store($question);
                 }
+                # Update cotation
+                $updateCotations = $this->questionnaireRepository->updateCotation($request->questionnaire_id);
+                foreach ($updateCotations['questions'] as $key => $question) {
+                    if ($question->type == 1) {
+                        $this->questionRepository->update($question->id, ['cotation' => $updateCotations['cotationPerception']]);
+                    }
+                    if ($question->type == 0) {
+                        $this->questionRepository->update($question->id, ['cotation' => $updateCotations['cotationImportance']]);
+                    }
+                    if ($question->type == 2) {
+                        $this->questionRepository->update($question->id, ['cotation' => $updateCotations['cotationAttente']]);
+                    }
+                }
             });
-        } catch (\Throwable $th) {
-            errorManager("Store category error : ", $th, $th);
+        } catch (Exception $ex) {
+            // dd(11);
+            errorManager("Store category error : ", $ex, $ex);
             $notification = array(
-                'message' => "une erreur s'est produite " . $th->getMessage(),
+                'message' => "une erreur s'est produite " . $ex->getMessage(),
                 'alert-type' => 'error'
             );
             return redirect()->back()->with($notification);
@@ -111,10 +129,10 @@ class CategoryController extends Controller
         $category = $this->categoryRepository->getById($id);
         $questionnaires = $this->questionnaireRepository->getAll(2);
 
-        $view = view('admin.methode.edit', compact( 'category', 'questionnaires'))->render();
+        $view = view('admin.methode.edit', compact('category', 'questionnaires'))->render();
 
         return response()->json([
-            'view'=>$view
+            'view' => $view
         ]);
     }
 
@@ -127,7 +145,7 @@ class CategoryController extends Controller
         $lines = $request->lines;
         // dd($inputs, $lines);
         try {
-            DB::transaction(function () use ($inputs, $lines, $id) {
+            DB::transaction(function () use ($inputs, $lines, $id, $request) {
                 $this->categoryRepository->update($id, $inputs);
 
                 foreach ($lines['question'] as $key => $value) {
@@ -135,13 +153,28 @@ class CategoryController extends Controller
                         'intitule' => $value,
                         'response' => $lines['response'][$key],
                         'category_id' => $id,
-                        'cotation' => $lines['cotation'][$key]
+                        'cotation' => 0,
+                        'type' => $lines['type'][$key]
                     ];
 
-                    if(isset($lines['key_id'][$key])){
+                    if (isset($lines['key_id'][$key])) {
                         $this->questionRepository->update($lines['key_id'][$key], $question);
-                    } else{
+                    } else {
                         $this->questionRepository->store($question);
+                    }
+
+                    # Update cotation
+                    $updateCotations = $this->questionnaireRepository->updateCotation($request->questionnaire_id);
+                    foreach ($updateCotations['questions'] as $key => $question) {
+                        if ($question->type == 1) {
+                            $this->questionRepository->update($question->id, ['cotation' => $updateCotations['cotationPerception']]);
+                        }
+                        if ($question->type == 0) {
+                            $this->questionRepository->update($question->id, ['cotation' => $updateCotations['cotationImportance']]);
+                        }
+                        if ($question->type == 2) {
+                            $this->questionRepository->update($question->id, ['cotation' => $updateCotations['cotationAttente']]);
+                        }
                     }
 
                 }

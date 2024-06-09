@@ -42,7 +42,7 @@
                                     <tr>
 
                                         <th>{{ __('Nom de la méthode (Quiz lié)') }} </th>
-                                        <th colspan="{{ count($category->questions) + 1 }}">{{ __('Question lié') }} </th>
+                                        <th colspan="{{ count($category->questions) + 1 }}">{{ __('Questions liées') }} </th>
 
                                     </tr>
                                 </thead>
@@ -50,17 +50,25 @@
                                     @php
                                         $cpt = 1;
                                     @endphp
+                                    {{-- @dd(count($category->questions) + 1) --}}
                                     <tr>
 
-                                        <td rowspan="{{ count($category->questions) + 1 }}">
+                                        <td rowspan="{{ count($category->questions) + 2 }}">
                                             {{ $category->name }} ({{ $category->questionnaire->name }})
                                         </td>
                                         <td colspan="{{ count($category->questions) + 1 }}">
+                                            <tr>
+                                                <th>Intitulé de la question</th>
+                                                <th>Cotation</th>
+                                                <th>Type</th>
+                                                <th>Réponse</th>
+                                            </tr>
                                             @foreach ($category->questions as $question)
                                     <tr>
                                         <td>{{ $question->intitule }}</td>
                                         <td>{{ $question->cotation }}</td>
-                                        <td>{{ $question->response }}</td>
+                                        <td>{{ $question->type == 0? "Importance":($question->type == 1?'Perception':"Attente") }}</td>
+                                        <td>{{ $question->response == 1? 'Oui/Vrai' :'Non/Faux'}}</td>
 
                                     </tr>
                                     @endforeach

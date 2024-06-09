@@ -1,19 +1,19 @@
 $('#save-edit-category').click((e) => {
     e.preventDefault();
     console.log('edit');
-    let inputs = $('#form-edit-category .cotation');
-    let sommeCotation = 0;
+    // let inputs = $('#form-edit-category .cotation');
+    // let sommeCotation = 0;
     if (!ControlRequiredFields($('#form-edit-category .required'))) {
         return 0;
     }
-    for (let i = 0; i < inputs.length; i++) {
-        sommeCotation += parseFloat($(inputs[i]).val());
-    }
-    console.log('cotation : ' + sommeCotation);
-    if (sommeCotation != 100) {
-        $('.error-cotation').removeAttr('hidden');
-        return 0;
-    }
+    // for (let i = 0; i < inputs.length; i++) {
+    //     sommeCotation += parseFloat($(inputs[i]).val());
+    // }
+    // console.log('cotation : ' + sommeCotation);
+    // if (sommeCotation != 100) {
+    //     $('.error-cotation').removeAttr('hidden');
+    //     return 0;
+    // }
     $('#save-edit-category').prop("disabled", true);
     $('#form-edit-category').submit();
 });
@@ -27,9 +27,14 @@ $('#neu-line-edit').click(() => {
         'name="lines[question][]" id="" placeholder="Satisfaction client" required>' +
         '</div>' +
         '<div class="form-group">' +
-        '<label for="name">Cotation <em style="color:red">*</em></label>' +
-        '<input type="number" class="form-control required-question cotation form-control-border border-width-1 required"' +
-        'name="lines[cotation][]" id="q1" min="1" step="0.5" placeholder="Satisfaction client" required>' +
+        '<label for="type">Type<em style="color:red">*</em></label>' +
+        '<select name="lines[type][]" class="custom-select required-question form-control-border border-width-1 required"' +
+        'id="type" required>' +
+        '<option value="" disabled selected >Choisir</option>' +
+        '<option value="2"  selected >Attente</option>' +
+        '<option value="0"  selected >Importance</option>' +
+        '<option value="1"  selected >Perception</option>' +
+        '</select>' +
         '</div>' +
         '<div class="form-group">' +
         '<label for="response">Réponse 1 <em style="color: red">*</em></label>' +

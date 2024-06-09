@@ -24,9 +24,14 @@
                 name="lines[question][]" id="q1" placeholder="Satisfaction client" required>
         </div>
         <div class="form-group">
-            <label for="name">{{ __('Cotation') }} <em style="color:red">*</em></label>
-            <input type="number" class="form-control required-question cotation form-control-border border-width-1 required"
-                name="lines[cotation][]" id="q1" min="1" step="0.5" placeholder="Satisfaction client" required>
+            <label for="type">{{ __('Type') }} <em style="color:red">*</em></label>
+            <select name="lines[type][]" class="custom-select required-question form-control-border border-width-1 required"
+                id="type" required>
+                <option value="" disabled selected >Choisir</option>
+                <option value="2">Attente</option>
+                <option value="0">Importance</option>
+                <option value="1">Perception</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="response">Réponse 1 <em style="color: red">*</em></label>

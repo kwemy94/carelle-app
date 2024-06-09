@@ -36,11 +36,15 @@
                         name="lines[question][]" id="q{{ $question->id }}" value="{{ $question->intitule }}" required>
                 </div>
                 <div class="form-group">
-                    <label for="name">{{ __("Cotation $i") }} <em style="color:red">*</em></label>
-                    <input type="number"
-                        class="form-control required-question cotation form-control-border border-width-1 required"
-                        name="lines[cotation][]" id="q1{{ $question->id }}" min="1" step="0.5"
-                        value="{{ $question->cotation }}" required>
+                    <label for="type">{{ __('Type') }} <em style="color:red">*</em></label>
+                    <select name="lines[type][]"
+                        class="custom-select required-question form-control-border border-width-1 required"
+                        id="type" required>
+                        <option value="" disabled selected>Choisir</option>
+                        <option value="2" {{ $question->type == 2? 'selected': '' }}>Attente</option>
+                        <option value="0" {{ $question->type == 0? 'selected': '' }}>Importance</option>
+                        <option value="1" {{ $question->type == 1? 'selected': '' }}>Perception</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="response">Réponse {{ $i }} <em style="color: red">*</em></label>

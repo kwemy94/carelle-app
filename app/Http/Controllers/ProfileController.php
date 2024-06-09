@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\View\View;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -72,9 +73,13 @@ class ProfileController extends Controller
     {
         try {
             $user = Auth::user();
-            
-            $fileName = time().'_'.$request->avatar->getClientOriginalName();
-            $filePath = $request->file('avatar')->storeAs('dashboard-template/dist/img', $fileName, 'public');
+
+            if (!is_null($request->avatar)) {
+                $profilImage = $request->file('avatar');
+                $profilName = Str::uuid() . '.' . $profilImage->getClientOriginalExtension();
+                $request->avatar->storeAs('public/dashboard-template/dist/img', $profilName);
+                
+            }
            
             if (File::exists(public_path('storage/dashboard-template/dist/img/'.$user->avatar))) {
                 // dd(1);
@@ -83,7 +88,7 @@ class ProfileController extends Controller
     
             DB::table('users')
                 ->where('id', $user->id)
-                ->update(['avatar' => $fileName]);
+                ->update(['avatar' => $profilName]);
             
         } catch (\Exception $e) {
             errorManager('Echec mise à jour avatar : ', $e, $e);

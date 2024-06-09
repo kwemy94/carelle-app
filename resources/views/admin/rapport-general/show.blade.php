@@ -105,6 +105,28 @@
                     </div>
                 </div>
 
+                <div class="col-md-6">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">NFS & NSR</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="pie-nfs"
+                                style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -155,6 +177,7 @@
     </script>
     <script>
         const ctx = document.getElementById('pieChart');
+        const nfs = document.getElementById('pie-nfs');
 
         let sizeData = @json($datas).length;
         const datas = {
@@ -175,9 +198,28 @@
             }]
         };
 
+        const dataNfs = {
+
+            labels: ['NFS', 'NSR'],
+            datasets: [{
+                label: '',
+
+                data: @json($dataNfs),
+                backgroundColor: [
+                    'rgb(5, 5, 40)',
+                    'rgb(2, 99, 12)',
+                ],
+                hoverOffset: 4
+            }]
+        };
+
         new Chart(ctx, {
             type: 'pie',
             data: datas
+        });
+        new Chart(nfs, {
+            type: 'pie',
+            data: dataNfs
         });
     </script>
 @endsection

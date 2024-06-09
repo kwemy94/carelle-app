@@ -111,7 +111,11 @@ class AnswerController extends Controller
                 // dd($category);
                 #calcul de la valeur de chaque catégory et construire les datas
                 $som = 0; 
+                
                 if (json_decode($answer->resultat)) {
+                    $truePerception = 0;
+                    $trueAttente = 0;
+                    $trueImportaance = 0;
                     foreach (json_decode($answer->resultat) as $key => $value) {
                         $id = explode("_", $key);
                         $question = $this->questionRepository->getById($id[1]);
@@ -121,6 +125,17 @@ class AnswerController extends Controller
                             #tester si la réponse du client correspond à la réponse attendue
                             if ($question->response == $value) {
                                 $som += $question->cotation;
+
+                                #données de calcul du pourcentage P I et A
+                                if($question->type == 1){
+                                    $truePerception++;
+                                }
+                                if($question->type == 2){
+                                    $trueAttente++;
+                                }
+                                if($question->type == 0){
+                                    $trueImportaance++;
+                                }
                             }
                         }
                     }
@@ -153,12 +168,27 @@ class AnswerController extends Controller
                 }
             }
             // dd($labels);
+            $upCategory = $this->questionnaireRepository->updateCotation($answer->questionnaire->id);
+
+            $nFS = 0;
+            if($upCategory['perception'] != 0 && $upCategory['attente'] != 0 && $trueAttente != 0){
+                $nFS = ($truePerception/$upCategory['perception'])*100/($trueAttente/$upCategory['attente']);
+            }
+            
+            $nSR = 0;
+            if($upCategory['importance'] != 0){
+                $importance = $trueImportaance*100/$upCategory['importance'];
+                $nSR = ($nFS/100) * $importance;
+            }
+
+            $dataNfs = [$nFS, $nSR];
             if ($bilan) {
                 return [
                     'labels' => $labels,
                     'datas' => $datas,
                     'bgColor' => $bgColor,
-                    'dataSolutions' => $dataSolutions
+                    'dataSolutions' => $dataSolutions,
+                    'dataNfs'=> $dataNfs
                 ];
             }
             // dd($dataSolutions);
@@ -171,7 +201,7 @@ class AnswerController extends Controller
             return redirect()->back()->with($notification);
         }
 
-        return view('admin.answer.show', compact('answer', 'dataSolutions', 'labels', 'datas', 'bgColor'));
+        return view('admin.answer.show', compact('answer', 'dataSolutions', 'labels', 'datas', 'bgColor', 'nFS', 'nSR', 'dataNfs'));
     }
 
     /**
@@ -234,10 +264,16 @@ class AnswerController extends Controller
 
         $labels = [];
         $datas = array();
+        // $cpt = 0;
+        // dd(count($questionnaire->answers));
+        $somDataNfs = ['nfs'=>0, 'nsr'=>0];
         foreach ($questionnaire->answers as $answer) {
             $res = $this->show($answer->id, true);
             $labels = $res['labels'];
-            
+            $somDataNfs['nfs'] += $res['dataNfs'][0];
+            $somDataNfs['nsr'] += $res['dataNfs'][1];
+            // dump($cpt++, $answer->id);
+            // if($cpt == 5) dd(2);
             for ($i = 0; $i < count($labels); $i++) {
                 if (isset($datas[$i])) {
                     $datas[$i] += $res['datas'][$i];
@@ -248,15 +284,15 @@ class AnswerController extends Controller
             }
         }
         $dataSolutions = $res['dataSolutions'];
-        // dd($dataSolutions);
 
         #prendre la moyenne des datas trouvée
         if ($totalAnswer > 0) {
             for ($i = 0; $i < count($datas); $i++) {
                 $datas[$i] = $datas[$i] / $totalAnswer;
             }
+            $dataNfs = [$somDataNfs['nfs']/$totalAnswer, $somDataNfs['nsr']/$totalAnswer];
         }
 
-        return view('admin.rapport-general.show', compact('dataSolutions', 'questionnaire', 'labels', 'datas', 'answers', 'questionnaires'));
+        return view('admin.rapport-general.show', compact('dataNfs','dataSolutions', 'questionnaire', 'labels', 'datas', 'answers', 'questionnaires'));
     }
 }

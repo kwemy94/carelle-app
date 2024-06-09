@@ -25,7 +25,7 @@
                     <!-- PIE CHART -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Resultat du Client {{ $answer->id }}. Quiz :
+                            <h3 class="card-title">Resultat {{ isset($answer->name)? 'de '.$answer->name : 'du client '.$answer->id }}. Quiz :
                                 {{ $answer->questionnaire->name }}</h3>
 
                             <div class="card-tools">
@@ -72,7 +72,7 @@
                                                     </div>
                                                 </div>
                                                 @if (isset($dataSolutions[$key]))
-                                                    <small>{{ $dataSolutions[$key] }}</small>
+                                                    <small>{!! $dataSolutions[$key] !!}</small>
                                                 @else
                                                     <small>Faites une analyse selon le diagramme de résultat
                                                         ci-contre.</small>
@@ -87,7 +87,7 @@
                                                 <div class="position-relative p-3 bg-gray" style="height: 180px">
                                                     <div class="ribbon-wrapper">
                                                         <div class="ribbon bg-success">
-                                                            {{ $item }}
+                                                            {!! $item !!}
                                                         </div>
                                                     </div>
                                                     <small>Faites une analyse selon le diagramme de résultat
@@ -104,6 +104,32 @@
                         </div>
                         {{-- /.card-body --}}
                     </div>
+                </div>
+                <div class="col-md-6">
+
+
+                    <!-- PIE CHART -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Resultat NFS & NSR </h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="pie-nfs"
+                                style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        </div>
+
+                    </div>
+
+
                 </div>
 
             </div>
@@ -156,6 +182,7 @@
     </script>
     <script>
         const ctx = document.getElementById('pieChart');
+        const nfs = document.getElementById('pie-nfs');
 
         let sizeData = @json($bgColor).length;
         const datas = {
@@ -176,9 +203,28 @@
             }]
         };
 
+        const dataNfs = {
+
+            labels: ['NFS', 'NSR'],
+            datasets: [{
+                label: '',
+
+                data: @json($dataNfs),
+                backgroundColor: [
+                    'rgb(5, 5, 40)',
+                    'rgb(2, 99, 12)',
+                ],
+                hoverOffset: 4
+            }]
+        };
+
         new Chart(ctx, {
             type: 'pie',
             data: datas
+        });
+        new Chart(nfs, {
+            type: 'pie',
+            data: dataNfs
         });
     </script>
 @endsection
