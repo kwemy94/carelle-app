@@ -7,7 +7,7 @@
         <div class="form-group">
             <label for="name">{{ __('Intitulé du questionnaire') }} <em style="color:red">*</em></label>
             <input type="text" class="form-control form-control-border border-width-2 required"
-                name="name" id="name" placeholder="Satisfaction client" value="{{ asset($questionnaire)? $questionnaire->name : '' }}" required>
+                name="name" id="name" placeholder="Satisfaction client" required>
         </div>
          
         <div class="form-group">
