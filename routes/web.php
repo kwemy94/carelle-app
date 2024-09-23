@@ -15,6 +15,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\SolutionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QuestionnaireController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,19 @@ Route::get('/', function () {
     $canRegister = Setting::where('name', "Activer l'enregistrement des utilisateurs")->first();
     return view('welcome', compact('questionnaires', 'canRegister'));
 })->name('home');
+
+## Email verification
+Route::get('/email/verify', function () {
+
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+# Email verification handler
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $r) {
+    $r->fulfill();
+
+    return redirect('/');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
 # Language management
 Route::get('lang/home', [LangController::class, 'index']);

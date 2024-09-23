@@ -111,7 +111,7 @@
                     <!-- PIE CHART -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Resultat NFS & NSR </h3>
+                            <h3 class="card-title">Resultat NSC & SRC </h3>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -205,7 +205,7 @@
 
         const dataNfs = {
 
-            labels: ['NFS', 'NSR'],
+            labels: ['NSC', 'SRC'],
             datasets: [{
                 label: '',
 

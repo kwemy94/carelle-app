@@ -14,7 +14,7 @@
                             class="avatar-xl rounded-circle border border-4 border-white" alt="avatar">
                     </div>
                     <div class="lh-1">
-                        <h2 class="mb-0">Brivi's
+                        <h2 class="mb-0">Sat-Cli
                             <a href="#" class="text-decoration-none" data-bs-toggle="tooltip"
                                 data-placement="top" title="Beginner">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"

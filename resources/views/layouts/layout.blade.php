@@ -49,7 +49,7 @@
 
     <!-- Theme CSS -->
     <link rel="stylesheet" href="{{ asset('front-end/assets/css/theme.min.css') }}">
-    <title>Quiz Tech Briva</title>
+    <title>Quiz Sat-Cli</title>
 
     @yield('front-end-css')
 </head>
