@@ -77,13 +77,14 @@ class ProfileController extends Controller
             if (!is_null($request->avatar)) {
                 $profilImage = $request->file('avatar');
                 $profilName = Str::uuid() . '.' . $profilImage->getClientOriginalExtension();
-                $request->avatar->storeAs('public/dashboard-template/dist/img', $profilName);
+                #$request->avatar->storeAs('dashboard-template/dist/img', $profilName);
+                $request->avatar->move(public_path('images'), $profilName);
                 
             }
            
-            if (File::exists(public_path('storage/dashboard-template/dist/img/'.$user->avatar))) {
+            if (file_exists(public_path('images/'.$user->avatar))) {
                 // dd(1);
-                File::delete(public_path('storage/dashboard-template/dist/img/'.$user->avatar));
+                unlink(public_path('images/'.$user->avatar));
             }
     
             DB::table('users')

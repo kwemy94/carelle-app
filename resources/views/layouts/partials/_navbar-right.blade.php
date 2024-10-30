@@ -5,7 +5,8 @@
 
     <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
-            <img src='{{ asset("storage/dashboard-template/dist/img/".$user->avatar) }}' alt="User Avatar" class="img-size-50 mr-3 img-circle"
+            {{-- <img src='{{ asset("storage/dashboard-template/dist/img/".$user->avatar) }}' alt="User Avatar" class="img-size-50 mr-3 img-circle" --}}
+            <img src='{{ asset('images/' . $user->avatar) }}' alt="User Avatar" class="img-size-50 mr-3 img-circle"
                 style="width: 32px">
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
