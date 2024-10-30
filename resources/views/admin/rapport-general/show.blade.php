@@ -54,7 +54,8 @@
                         {{-- /.card-header --}}
                         <div class="card-body">
                             <div class="row">
-                                @if (count($dataSolutions) != 0)
+                                {{-- @if (count($dataSolutions) != 0) --}}
+                                @if (0 != 0)
                                     @php
                                         $existLabels = [];
                                     @endphp
@@ -179,14 +180,14 @@
         const ctx = document.getElementById('pieChart');
         const nfs = document.getElementById('pie-nfs');
 
-        let sizeData = @json($datas).length;
+        let sizeData = @json($datasNSC).length;
         const datas = {
 
             labels: @json($labels),
             datasets: [{
                 label: @json($questionnaire->name),
 
-                data: @json($datas),
+                data: @json($datasNSC),
                 backgroundColor: [
                     'rgb(205, 99, 132)',
                     sizeData >= 2 ? 'rgb(54, 162, 235)' : '',
@@ -200,14 +201,17 @@
 
         const dataNfs = {
 
-            labels: ['NFS', 'NSR'],
+            labels: @json($labelSRC),
             datasets: [{
                 label: '',
 
-                data: @json($dataNfs),
+                data: @json($datasSRC),
                 backgroundColor: [
-                    'rgb(5, 5, 40)',
-                    'rgb(2, 99, 12)',
+                    'rgb(205, 99, 132)',
+                    sizeData >= 2 ? 'rgb(54, 162, 235)' : '',
+                    sizeData >= 3 ? 'rgb(255, 205, 86)' : '',
+                    sizeData >= 4 ? 'rgb(255, 5, 40)' : '',
+                    sizeData >= 5 ? 'rgb(255, 45, 90)' : '',
                 ],
                 hoverOffset: 4
             }]

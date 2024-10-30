@@ -408,37 +408,41 @@ class AnswerController extends Controller
         $totalAnswer = count($questionnaire->answers);
 
         $labels = [];
-        $datas = array();
-        // $cpt = 0;
+        $datasNSC = array();
+        $datasSRC = array();
         // dd(count($questionnaire->answers));
         $somDataNfs = ['nfs' => 0, 'nsr' => 0];
         foreach ($questionnaire->answers as $answer) {
             $res = $this->show($answer->id, true);
             $labels = $res['labels'];
-            $labels = $res['labelSRC'];
-            $somDataNfs['nfs'] += $res['dataNfs'][0];
-            $somDataNfs['nsr'] += $res['dataNfs'][1];
-            // dump($cpt++, $answer->id);
-            // if($cpt == 5) dd(2);
-            for ($i = 0; $i < count($labels); $i++) {
-                if (isset($datas[$i])) {
-                    $datas[$i] += $res['datas'][$i];
-                } else {
-                    $datas[$i] = $res['datas'][$i];
-                }
+            $labelSRC = $res['labelSRC'];
+            foreach($res['datas'] as $key => $data){
+                isset($datasNSC[$key]) ? $datasNSC[$key] += $data : $datasNSC[$key] = $data;
+                isset($datasSRC[$key]) ? $datasSRC[$key] += $res['datasSRC'][$key] : $datasSRC[$key] = $res['datasSRC'][$key];
 
             }
+            // dump($cpt++, $answer->id);
+            // if($cpt == 5) dd(2);
+            // for ($i = 0; $i < count($labels); $i++) {
+            //     if (isset($datas[$i])) {
+            //         $datas[$i] += $res['datas'][$i];
+            //     } else {
+            //         $datas[$i] = $res['datas'][$i];
+            //     }
+
+            // }
         }
-        $dataSolutions = $res['dataSolutions'];
+        // $dataSolutions = $res['dataSolutions'];
 
         #prendre la moyenne des datas trouvée
         if ($totalAnswer > 0) {
-            for ($i = 0; $i < count($datas); $i++) {
-                $datas[$i] = $datas[$i] / $totalAnswer;
+            for ($i = 0; $i < count($datasNSC); $i++) { 
+                $datasNSC[$i] = $datasNSC[$i] / $totalAnswer;
+                $datasSRC[$i] = $datasSRC[$i] / $totalAnswer;
             }
-            $dataNfs = [$somDataNfs['nfs'] / $totalAnswer, $somDataNfs['nsr'] / $totalAnswer];
         }
 
-        return view('admin.rapport-general.show', compact('dataNfs', 'dataSolutions', 'questionnaire', 'labels', 'datas', 'answers', 'questionnaires'));
+        // return view('admin.rapport-general.show', compact('dataNfs', 'dataSolutions', 'questionnaire', 'labels', 'datas', 'answers', 'questionnaires'));
+        return view('admin.rapport-general.show', compact(  'questionnaire', 'labels', 'labelSRC', 'datasNSC','datasSRC', 'answers', 'questionnaires'));
     }
 }
