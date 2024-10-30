@@ -61,7 +61,7 @@ class AnswerController extends Controller
             $inputs['resultat'] = json_encode($request->lines);
             $quiz = $this->questionnaireRepository->getById($request->questionnaire_id);
             // dd($request->lines);
-            if (is_null($request->lines) ) {
+            if (is_null($request->lines)) {
                 $notification = array(
                     'message' => "Vous n'avez pas remplis le formulaire",
                     'alert-type' => 'error'
@@ -96,11 +96,11 @@ class AnswerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id, $bilan = false)
+    public function show_v0($id, $bilan = false)
     {
         $answer = $this->answerRepository->getById($id);
         $questionnaire = $this->questionnaireRepository->getById($answer->questionnaire->id);
-        
+
         #creation du tableau des labels du graph
         $labels = [];
         $datas = [];
@@ -110,12 +110,12 @@ class AnswerController extends Controller
                 $labels = array_merge($labels, [$category->name]);
                 // dd($category);
                 #calcul de la valeur de chaque catégory et construire les datas
-                $som = 0; 
-                
+                $som = 0;
+
                 if (json_decode($answer->resultat)) {
                     $truePerception = 0;
                     $trueAttente = 0;
-                    $trueImportaance = 0;
+                    $trueImportance = 0;
                     foreach (json_decode($answer->resultat) as $key => $value) {
                         $id = explode("_", $key);
                         $question = $this->questionRepository->getById($id[1]);
@@ -127,18 +127,21 @@ class AnswerController extends Controller
                                 $som += $question->cotation;
 
                                 #données de calcul du pourcentage P I et A
-                                if($question->type == 1){
+                                if ($question->type == 1) {
                                     $truePerception++;
                                 }
-                                if($question->type == 2){
+                                if ($question->type == 2) {
                                     $trueAttente++;
                                 }
-                                if($question->type == 0){
-                                    $trueImportaance++;
+                                if ($question->type == 0) {
+                                    $trueImportance++;
                                 }
                             }
                         }
                     }
+                    $somCotation = $this->questionRepository->somCotationByCategory($category->id);
+                    $som = number_format(($som / $somCotation) * 100, 2);
+                    // dump($som);
                     $datas = array_merge($datas, [$som]);
 
                     #recupérer la solution qui cadre avec la réponse
@@ -147,14 +150,14 @@ class AnswerController extends Controller
                     if ($cat->solutions) {
                         foreach ($cat->solutions as $solution) {
                             // dump($som,$solution->pivot->marge_inf, $solution->pivot->marge_sup);
-                            if($solution->pivot->marge_inf < $som && $som <= $solution->pivot->marge_sup ){
-                                $dataSolutions = array_merge($dataSolutions, [$category->name => $solution->intitule.' : '.$solution->description]);
+                            if ($solution->pivot->marge_inf < $som && $som <= $solution->pivot->marge_sup) {
+                                $dataSolutions = array_merge($dataSolutions, [$category->name => $solution->intitule . ' : ' . $solution->description]);
                             }
                         }
-                    }else{
+                    } else {
                         $dataSolutions = array_merge($dataSolutions, ["Faites une analyse manuel de ce résultat"]);
                     }
-                    
+
                     # Construction du tableau des couleurs
                     $bgColor = [];
                     $val = 10;
@@ -162,37 +165,64 @@ class AnswerController extends Controller
                         $val += $key + 8;
                         $bgColor = array_merge($bgColor, ["rgb(255, $val, $val)"]);
                     }
-                    
+
                 } else {
                     throw new Exception("Le client à soumis un formulaire vide");
                 }
+
+                $upCategory = $this->categoryRepository->updateCotation($category->id);
+
+                $NSC_qualite = 0;
+                $NSC_delai = 0;
+                $NSC_cout = 0;
+                if ($upCategory['perception'] != 0 && $upCategory['attente'] != 0 && $trueAttente != 0) {
+                    $nFS = ($truePerception / $upCategory['perception']) * 100 / ($trueAttente / $upCategory['attente']);
+                }
+
+                $nSR = 0;
+                if ($upCategory['importance'] != 0) {
+                    $importance = $trueImportance * 100 / $upCategory['importance'];
+                    $nSR = ($nFS / 100) * $importance;
+                }
+
+                $dataNfs = [$nFS, $nSR];
+                if ($bilan) {
+                    return [
+                        'labels' => $labels,
+                        'datas' => $datas,
+                        'bgColor' => $bgColor,
+                        'dataSolutions' => $dataSolutions,
+                        'dataNfs' => $dataNfs
+                    ];
+                }
             }
             // dd($labels);
-            $upCategory = $this->questionnaireRepository->updateCotation($answer->questionnaire->id);
+            // $upCategory = $this->questionnaireRepository->updateCotation($answer->questionnaire->id);
 
-            $nFS = 0;
-            if($upCategory['perception'] != 0 && $upCategory['attente'] != 0 && $trueAttente != 0){
-                $nFS = ($truePerception/$upCategory['perception'])*100/($trueAttente/$upCategory['attente']);
-            }
-            
-            $nSR = 0;
-            if($upCategory['importance'] != 0){
-                $importance = $trueImportaance*100/$upCategory['importance'];
-                $nSR = ($nFS/100) * $importance;
-            }
+            // $nFS = 0;
+            // if($upCategory['perception'] != 0 && $upCategory['attente'] != 0 && $trueAttente != 0){
+            //     $nFS = ($truePerception/$upCategory['perception'])*100/($trueAttente/$upCategory['attente']);
+            // }
 
-            $dataNfs = [$nFS, $nSR];
-            if ($bilan) {
-                return [
-                    'labels' => $labels,
-                    'datas' => $datas,
-                    'bgColor' => $bgColor,
-                    'dataSolutions' => $dataSolutions,
-                    'dataNfs'=> $dataNfs
-                ];
-            }
+            // $nSR = 0;
+            // if($upCategory['importance'] != 0){
+            //     $importance = $trueImportance*100/$upCategory['importance'];
+            //     $nSR = ($nFS/100) * $importance;
+            // }
+
+            // $dataNfs = [$nFS, $nSR];
+            // if ($bilan) {
+            //     return [
+            //         'labels' => $labels,
+            //         'datas' => $datas,
+            //         'bgColor' => $bgColor,
+            //         'dataSolutions' => $dataSolutions,
+            //         'dataNfs'=> $dataNfs
+            //     ];
+            // }
             // dd($dataSolutions);
         } catch (Exception $th) {
+            dd($th);
             errorManager("listing bilan : ", $th, $th);
             $notification = array(
                 'message' => "" . $th->getMessage(),
@@ -202,6 +232,121 @@ class AnswerController extends Controller
         }
 
         return view('admin.answer.show', compact('answer', 'dataSolutions', 'labels', 'datas', 'bgColor', 'nFS', 'nSR', 'dataNfs'));
+    }
+    public function show($id, $bilan = false)
+    {
+
+        #creation du tableau des labels du graph
+        $labels = [];
+        $datas = [];
+        $datasSRC = [];
+        $dataSolutions = [];
+        $tabNSC = array();
+        $tabSRC = array();
+        $labelSRC = [];
+        $tabImportance = array();
+        try {
+            $answer = $this->answerRepository->getById($id);
+            $questionnaire = $this->questionnaireRepository->getById($answer->questionnaire->id);
+            // dd($questionnaire);
+            #fixer les labels du tabl
+            foreach ($questionnaire->categories as $category) {
+                $labels = array_merge($labels, [$category->name]);
+
+                # calcul nsc des differentes catégorie
+                $nsc = 0;
+                $result = json_decode($answer->resultat);
+                if ($result) {
+                    $truePerception = 0;
+                    $trueAttente = 0;
+                    $trueImportance = 0;
+
+                    foreach ($result as $key => $value) {
+                        $id = explode("_", $key);
+                        $question = $this->questionRepository->getById($id[1]);
+
+                        #tester si la question est dans la catégorie courrante
+                        if ($question->category_id == $category->id) {
+                            #tester si la réponse du client correspond à la réponse attendue
+                            if ($question->response == $value) {
+                                // $som += $question->cotation;
+
+                                #données de calcul du pourcentage P I et A
+                                if ($question->type == 1) {
+                                    $truePerception += $question->cotation;
+                                }
+                                if ($question->type == 2) {
+                                    $trueAttente += $question->cotation;
+                                }
+                                if ($question->type == 0) {
+                                    $trueImportance += $question->cotation;
+                                }
+                            }
+                        }
+                    }
+
+                    #endregion
+                    if ($trueAttente == 0) {
+                        $trueAttente = 1;
+                    }
+                    $nsc = $truePerception / $trueAttente;
+                    $tabNSC = array_merge($tabNSC, [$nsc]);
+                    $tabImportance = array_merge($tabImportance, [$trueImportance]);
+                    # Construction du tableau des couleurs
+                    $bgColor = [];
+                    $val = 10;
+                    foreach ($labels as $key => $value) {
+                        $val += $key + 8;
+                        $bgColor = array_merge($bgColor, ["rgb(255, $val, $val)"]);
+                    }
+
+                } else {
+                    throw new Exception("Le client à soumis un formulaire vide");
+                }
+            }
+
+            $somNSC = array_sum($tabNSC);
+            foreach ($tabNSC as $key => $value) {
+                $re = $somNSC != 0 ? ($value * 100) / $somNSC : 0;
+                $datas[$key] = number_format($re, 3);
+            }
+
+            #datas des SRC
+            foreach ($tabImportance as $key => $Ix) {
+                #calcul du SRC des différents méthodes (catégories)
+                $SRCx = ($tabNSC[$key] * $Ix) / 100;
+                $tabSRC = array_merge($tabSRC, [$SRCx]);
+            }
+
+            $somSRC = array_sum($tabSRC);
+            foreach ($tabSRC as $key => $src) {
+                $res = $somSRC != 0 ? ($src * 100) / $somSRC : 0;
+                $datasSRC[$key] = number_format($res, 3);
+                $labelSRC[$key] = "SRC " . $labels[$key];
+            }
+
+        } catch (Exception $th) {
+            dd($th);
+            errorManager("listing bilan : ", $th, $th);
+            $notification = array(
+                'message' => "" . $th->getMessage(),
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
+
+        if ($bilan) {
+            return [
+                'labels' => $labels,
+                'datas' => $datas,
+                'bgColor' => $bgColor,
+                'datasSRC' => $datasSRC,
+                'labelSRC' => $labelSRC
+            ];
+        }
+
+        // return view('admin.answer.show', compact('answer', 'dataSolutions', 'labels', 'datas', 'bgColor', 'nFS', 'nSR', 'dataNfs'));
+        return view('admin.answer.show', compact('answer', 'dataSolutions', 'labels', 'datas', 'bgColor', 'datasSRC', 'labelSRC'));
     }
 
     /**
@@ -266,10 +411,11 @@ class AnswerController extends Controller
         $datas = array();
         // $cpt = 0;
         // dd(count($questionnaire->answers));
-        $somDataNfs = ['nfs'=>0, 'nsr'=>0];
+        $somDataNfs = ['nfs' => 0, 'nsr' => 0];
         foreach ($questionnaire->answers as $answer) {
             $res = $this->show($answer->id, true);
             $labels = $res['labels'];
+            $labels = $res['labelSRC'];
             $somDataNfs['nfs'] += $res['dataNfs'][0];
             $somDataNfs['nsr'] += $res['dataNfs'][1];
             // dump($cpt++, $answer->id);
@@ -280,7 +426,7 @@ class AnswerController extends Controller
                 } else {
                     $datas[$i] = $res['datas'][$i];
                 }
-                
+
             }
         }
         $dataSolutions = $res['dataSolutions'];
@@ -290,9 +436,9 @@ class AnswerController extends Controller
             for ($i = 0; $i < count($datas); $i++) {
                 $datas[$i] = $datas[$i] / $totalAnswer;
             }
-            $dataNfs = [$somDataNfs['nfs']/$totalAnswer, $somDataNfs['nsr']/$totalAnswer];
+            $dataNfs = [$somDataNfs['nfs'] / $totalAnswer, $somDataNfs['nsr'] / $totalAnswer];
         }
 
-        return view('admin.rapport-general.show', compact('dataNfs','dataSolutions', 'questionnaire', 'labels', 'datas', 'answers', 'questionnaires'));
+        return view('admin.rapport-general.show', compact('dataNfs', 'dataSolutions', 'questionnaire', 'labels', 'datas', 'answers', 'questionnaires'));
     }
 }

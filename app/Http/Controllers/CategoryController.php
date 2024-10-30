@@ -79,8 +79,8 @@ class CategoryController extends Controller
                     $this->questionRepository->store($question);
                 }
                 # Update cotation
-                $updateCotations = $this->questionnaireRepository->updateCotation($request->questionnaire_id);
-                foreach ($updateCotations['questions'] as $key => $question) {
+                $updateCotations = $this->categoryRepository->updateCotation($category->id);
+                foreach ($updateCotations['category']->questions as $key => $question) {
                     if ($question->type == 1) {
                         $this->questionRepository->update($question->id, ['cotation' => $updateCotations['cotationPerception']]);
                     }
@@ -164,8 +164,9 @@ class CategoryController extends Controller
                     }
 
                     # Update cotation
-                    $updateCotations = $this->questionnaireRepository->updateCotation($request->questionnaire_id);
-                    foreach ($updateCotations['questions'] as $key => $question) {
+                    $updateCotations = $this->categoryRepository->updateCotation($id);
+                    foreach ($updateCotations['category']->questions as $key => $question) {
+
                         if ($question->type == 1) {
                             $this->questionRepository->update($question->id, ['cotation' => $updateCotations['cotationPerception']]);
                         }
@@ -180,6 +181,7 @@ class CategoryController extends Controller
                 }
             });
         } catch (\Throwable $th) {
+            dd($th);
             $notification = array(
                 'message' => "une erreur s'est produite " . $th->getMessage(),
                 'alert-type' => 'error'

@@ -16,4 +16,10 @@ class QuestionRepository extends ResourceRepository {
         return $this->model->orderBy('id', 'DESC')->get();
     }
 
+    public function somCotationByCategory($categoryId){
+        return $this->model
+            ->where([['category_id', $categoryId]])
+            ->sum('cotation');
+    }
+
 }

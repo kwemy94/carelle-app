@@ -57,7 +57,7 @@
         </nav>
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar elevation-4" style="background-color: rgb(223, 187, 203)">
+        <aside class="main-sidebar elevation-4" style="background-color: white;">
             <!-- Brand Logo -->
             <a href="{{ route('dashboard') }}" class="brand-link">
                 <img src="{{ asset('images/logo.png') }}" alt="AdminLTE Logo"

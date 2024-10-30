@@ -48,7 +48,7 @@
                                         <tr>
                                             <td>{{ $cpt++ }}</td>
                                             <td>
-                                                <a href="{{ route('rapport.general.chart', $questionnaire->id) }}">{{ $questionnaire->name }}</a> 
+                                                <a href="#{{ route('rapport.general.chart', $questionnaire->id) }}">{{ $questionnaire->name }}</a> 
                                             </td>
 
                                             <td>
