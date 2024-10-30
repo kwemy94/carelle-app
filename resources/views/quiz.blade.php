@@ -96,9 +96,9 @@
                                                 <div class="form-check">
                                                     <input class="form-check-input no-radio-input" type="radio"
                                                         name="lines[r_{{ $quiz->id }}]"
-                                                        id="flexRadioDefault2{{ $quiz->id }}">
+                                                        id="flexRadioDefault2x{{ $quiz->id }}">
                                                     <label class="form-check-label stretched-link"
-                                                        for="flexRadioDefault2{{ $quiz->id }}">
+                                                        for="flexRadioDefault2x{{ $quiz->id }}">
                                                         NON/FAUX
                                                     </label>
                                                 </div>
