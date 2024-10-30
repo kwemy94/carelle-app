@@ -76,7 +76,7 @@ class ProfileController extends Controller
 
             if (!is_null($request->avatar)) {
                 $profilImage = $request->file('avatar');
-                $profilName = Str::uuid() . '.' . $profilImage->getClientOriginalExtension();
+                $profilName = time().'.'.$profilImage->extension();
                 #$request->avatar->storeAs('dashboard-template/dist/img', $profilName);
                 $request->avatar->move(public_path('images'), $profilName);
                 
