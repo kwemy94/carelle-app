@@ -16,9 +16,9 @@ class UserSeeder extends Seeder
     {
         $users = array(
             array(
-                'name' => "admin",
-                'email' => 'admin@admin.com',
-                'password' => Hash::make('admin-shell'),
+                'name' => "admin-shell",
+                'email' => 'grantshell0@gmail.com',
+                'password' => '$2y$12$Db/mbVUJO5ztblcK.fX39.Iki0snwHkotjRD26LTFQ/eAbJrY40LO',
             )
         );
 
